@@ -41,8 +41,9 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       SESSION_SECRET: ${SESSION_SECRET}
-      ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL}
-      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD}
+      # ADMIN_BOOTSTRAP_* deliberately NOT passed here. The seed script takes
+      # --email/--password as CLI args, so the admin password never sits in a
+      # long-lived container environment. See scripts/seed-admin.mjs.
       UPLOADS_DIR: /app/uploads
       NODE_ENV: production
       FORCE_INSECURE_COOKIES: ${FORCE_INSECURE_COOKIES:-false}
