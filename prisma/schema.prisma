@@ -1,0 +1,151 @@
+// Prisma schema for the GOP Consultant Recruitment Portal.
+//
+// NOTE on indexes: Postgres GIN indexes on the array columns (functions,
+// skills, industries) cannot be expressed with Prisma's `@@index` syntax.
+// They are appended as raw SQL at the end of the generated migration file:
+// prisma/migrations/<timestamp>_init/migration.sql. See that file for the
+// exact CREATE INDEX ... USING GIN statements.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Level {
+  CONSULTANT // 5-10 yrs
+  SENIOR_CONSULTANT // 10-18 yrs
+  PRINCIPAL // 18-25 yrs
+  PARTNER // 25+ yrs
+}
+
+enum DeliveryFunction {
+  SALES_AND_BD
+  MARKETING_AND_BRANDING
+  OPERATIONS_AND_SUPPLY_CHAIN
+  HR_OPS_AND_ORGANISATION_DESIGN
+  TALENT_ACQUISITION_AND_HEAD_HUNTING
+  LEARNING_AND_DEVELOPMENT
+  BUSINESS_TRANSFORMATION_WITH_AI
+  CORPORATE_FINANCE_AND_WORKING_CAPITAL
+  ACCOUNTING_AND_TAXATION
+  ACCOUNTS_RECEIVABLES_AND_PAYABLES
+}
+
+// Flat enum. Cluster groupings (Strategy & Execution, Data & Analysis,
+// Tools & Communication, Growth & Business Development) are NOT modeled in
+// the DB — they are UI-only metadata and live in src/lib/constants.ts as
+// SKILL_CLUSTERS, keyed off this same enum so the mapping stays exhaustive.
+enum Skill {
+  STRATEGY
+  EXECUTION
+  PROCESS
+  SOP
+  TRACKERS
+  MIS
+  DATA_ANALYSIS
+  EXCEL
+  ADVANCED_EXCEL
+  BI
+  AGENTIC_AI
+  POWERPOINT
+  COMMUNICATION
+  DIGITAL_MARKETING_ASSETS_MANAGEMENT
+  KEY_ACCOUNTS_MANAGEMENT
+  LEAD_GENERATION
+  NEW_BUSINESS_DEVELOPMENT
+}
+
+enum Industry {
+  MANUFACTURING
+  PACKAGING
+  SERVICES
+  CONSULTING
+  PRIVATE_EQUITY
+  BANKING
+  OTHERS
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model Application {
+  id String @id @default(cuid())
+
+  fullName String
+  email    String
+  phone    String
+
+  level      Level
+  functions  DeliveryFunction[]
+  skills     Skill[]
+  industries Industry[]
+
+  city   String
+  state  String // free text, intentionally no enum
+  remote Boolean @default(false)
+
+  additionalNotes String? @db.Text
+
+  // Five qualifying questions - all required free text.
+  qWhatIsGop          String @db.Text
+  qWhyJoinGop         String @db.Text
+  qKeySkills          String @db.Text
+  qRelevantExperience String @db.Text
+  qHowDeliver         String @db.Text
+
+  // CV storage. Only a path/key is stored here; the file itself lives on
+  // the server's disk volume at cvStoredPath (e.g.
+  // uploads/cvs/{applicationId}/{cvFileName}).
+  //
+  // These four columns are nullable even though a CV is required at
+  // submission time. Reasoning: the application row is created first (to
+  // mint the cuid `id` that the upload path is keyed on), then the file is
+  // written to disk, then the row is updated with the CV metadata. Making
+  // these columns required would force either a two-phase-commit-style
+  // write that Postgres can't help with, or generating the id outside the
+  // DB. Nullable columns let the API layer do: create row -> stream file to
+  // disk using the new id -> update row with cv* fields, and let a null
+  // cvStoredPath after submission clearly signal "upload failed / incomplete"
+  // for admin cleanup, rather than silently violating a NOT NULL constraint
+  // or wrapping unrelated concerns in a single transaction.
+  cvFileName   String?
+  cvStoredPath String?
+  cvMimeType   String?
+  cvSizeBytes  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // GIN indexes on functions, skills, industries are added via raw SQL in
+  // the migration file — Prisma has no native syntax for them.
+
+  // Scalar filter/search indexes.
+  @@index([level])
+  @@index([city])
+  @@index([state])
+  @@index([remote])
+  @@index([createdAt])
+  @@index([fullName])
+  @@index([email])
+}
+
+// Admins are created by a seed script only — there is no signup route and no
+// permission tiers. If roles are ever needed, add them as a new migration.
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  lastLoginAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

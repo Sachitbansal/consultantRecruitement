@@ -1,0 +1,70 @@
+interface ChipProps {
+  id: string;
+  name: string;
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  type?: "checkbox" | "radio";
+}
+
+/**
+ * A single toggle rendered as a card-style chip, backed by a real
+ * checkbox/radio input for accessibility and keyboard support. The input is
+ * visually hidden but still focusable and screen-reader-visible.
+ */
+export function Chip({ id, name, label, checked, onChange, type = "checkbox" }: ChipProps) {
+  return (
+    <label
+      htmlFor={id}
+      className={`cursor-pointer select-none rounded-lg border px-3.5 py-2 text-sm transition-colors ${
+        checked
+          ? "border-navy bg-navy text-white"
+          : "border-hairline bg-white text-ink hover:border-navy/50"
+      }`}
+    >
+      <input
+        type={type}
+        id={id}
+        name={name}
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="sr-only peer"
+      />
+      <span className="peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-navy rounded">
+        {label}
+      </span>
+    </label>
+  );
+}
+
+interface ChipGroupProps<T extends string> {
+  options: T[];
+  labels: Record<T, string>;
+  selected: T[];
+  onToggle: (value: T) => void;
+  name: string;
+}
+
+/** Multi-select group of chips backed by checkboxes. */
+export function ChipGroup<T extends string>({
+  options,
+  labels,
+  selected,
+  onToggle,
+  name,
+}: ChipGroupProps<T>) {
+  return (
+    <div className="flex flex-wrap gap-2" role="group" aria-label={name}>
+      {options.map((opt) => (
+        <Chip
+          key={opt}
+          id={`${name}-${opt}`}
+          name={name}
+          label={labels[opt]}
+          checked={selected.includes(opt)}
+          onChange={() => onToggle(opt)}
+        />
+      ))}
+    </div>
+  );
+}

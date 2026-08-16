@@ -1,0 +1,63 @@
+# Self-hosted deployment for the GOP Consultant Recruitment Portal.
+# Runs entirely on the client's own server via Docker Compose. No Vercel,
+# no managed serverless platform, no managed DB/storage service.
+#
+# Reverse proxy / SSL (nginx + Let's Encrypt) is deliberately NOT configured
+# here — that is a later step. For now the `app` service publishes its port
+# on 127.0.0.1 only, so it is reachable from the host machine (for testing
+# and for a future nginx container/host-nginx to proxy to) but not exposed
+# directly to the internet.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # Named volume -> persists across `docker compose down && up`.
+      # (Deliberately NOT a bind mount or anonymous volume.)
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    # No ports published to the host: only the `app` service needs to reach
+    # Postgres, and it does so over the internal compose network by service
+    # name (`db`).
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL}
+      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD}
+      UPLOADS_DIR: /app/uploads
+      NODE_ENV: production
+      FORCE_INSECURE_COOKIES: ${FORCE_INSECURE_COOKIES:-false}
+    ports:
+      # Bound to localhost only — a reverse proxy (nginx, set up in a later
+      # step) will front this on the public domain/subdomain with SSL. Do
+      # NOT change this to "3000:3000" (i.e. 0.0.0.0), which would expose
+      # the app directly over plain HTTP.
+      - "127.0.0.1:${APP_PORT:-8001}:3000"
+    volumes:
+      # Named volume for uploaded CVs, separate from the app's own
+      # filesystem. Persists across image rebuilds/redeploys since it is
+      # not part of the container's writable layer.
+      - cv_uploads:/app/uploads
+
+volumes:
+  postgres_data:
+  cv_uploads:
