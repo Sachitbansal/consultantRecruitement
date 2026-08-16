@@ -21,23 +21,36 @@ import { RadioCardGroup } from "@/components/RadioCardGroup";
 const MAX_CV_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_CV_EXTENSIONS = [".pdf", ".doc", ".docx"];
 
+// `maxChars` is mirrored by the same limits in the zod schema on the API
+// route — the client cap is a courtesy, the server one is authoritative.
 const QUALIFYING_QUESTIONS: {
   field: keyof FormState;
   label: string;
+  maxChars: number;
 }[] = [
-  { field: "qWhatIsGop", label: "What is GOP?" },
-  { field: "qWhyJoinGop", label: "Why do you want to be part of GOP?" },
+  { field: "qWhatIsGop", label: "What is GOP?", maxChars: 200 },
+  {
+    field: "qWhyJoinGop",
+    label: "Why do you want to be part of GOP?",
+    maxChars: 200,
+  },
   {
     field: "qKeySkills",
     label:
       "What are your key skills that make you the go-to person for this role?",
+    maxChars: 300,
   },
   {
     field: "qRelevantExperience",
     label:
       "What's your relevant experience that qualifies you for this role?",
+    maxChars: 300,
   },
-  { field: "qHowDeliver", label: "How will you deliver your services?" },
+  {
+    field: "qHowDeliver",
+    label: "How will you deliver your services?",
+    maxChars: 200,
+  },
 ];
 
 interface FormState {
@@ -49,6 +62,7 @@ interface FormState {
   skills: Skill[];
   city: string;
   state: string;
+  country: string;
   remote: boolean;
   industries: Industry[];
   additionalNotes: string;
@@ -68,6 +82,7 @@ const initialState: FormState = {
   skills: [],
   city: "",
   state: "",
+  country: "India",
   remote: false,
   industries: [],
   additionalNotes: "",
@@ -144,7 +159,7 @@ export function ApplicationForm() {
     if (!form.email.trim()) next.email = "Enter your email address.";
     else if (!isValidEmail(form.email))
       next.email = "Enter a valid email address.";
-    if (!form.phone.trim()) next.phone = "Enter your phone number.";
+    if (!form.phone.trim()) next.phone = "Enter your mobile number.";
     if (!form.level) next.level = "Select your level.";
     if (form.functions.length === 0)
       next.functions = "Select at least one delivery function.";
@@ -152,12 +167,16 @@ export function ApplicationForm() {
       next.skills = "Select at least one skill.";
     if (!form.city.trim()) next.city = "Enter your city.";
     if (!form.state.trim()) next.state = "Enter your state.";
+    if (!form.country.trim()) next.country = "Enter your country.";
     if (form.industries.length === 0)
       next.industries = "Select at least one industry.";
     if (!cvFile) next.cv = "Upload your CV.";
     for (const q of QUALIFYING_QUESTIONS) {
-      if (!(form[q.field] as string).trim()) {
+      const value = (form[q.field] as string).trim();
+      if (!value) {
         next[q.field] = "This answer is required.";
+      } else if (value.length > q.maxChars) {
+        next[q.field] = `Keep this under ${q.maxChars} characters.`;
       }
     }
     return next;
@@ -188,6 +207,7 @@ export function ApplicationForm() {
       form.skills.forEach((s) => body.append("skills", s));
       body.append("city", form.city);
       body.append("state", form.state);
+      body.append("country", form.country);
       body.append("remote", String(form.remote));
       form.industries.forEach((i) => body.append("industries", i));
       body.append("additionalNotes", form.additionalNotes);
@@ -198,9 +218,6 @@ export function ApplicationForm() {
       body.append("qHowDeliver", form.qHowDeliver);
       if (cvFile) body.append("cv", cvFile);
 
-      // NOTE: /api/applications does not exist yet — it lands in a later
-      // step (api-builder). Until then this request will 404, which is
-      // handled below as a clean, readable error rather than a crash.
       const res = await fetch("/api/applications", {
         method: "POST",
         body,
@@ -276,7 +293,7 @@ export function ApplicationForm() {
               autoComplete="email"
             />
           </Field>
-          <Field label="Phone" htmlFor="phone" error={errors.phone}>
+          <Field label="Mobile" htmlFor="phone" error={errors.phone}>
             <TextInput
               id="phone"
               type="tel"
@@ -287,6 +304,52 @@ export function ApplicationForm() {
             />
           </Field>
         </div>
+
+        {/* Location lives inside Contact details rather than as its own
+            section — it's part of "who and where you are". */}
+        <div className="grid sm:grid-cols-3 gap-4">
+          <Field label="City" htmlFor="city" error={errors.city}>
+            <TextInput
+              id="city"
+              error={errors.city}
+              value={form.city}
+              onChange={(e) => update("city", e.target.value)}
+              autoComplete="address-level2"
+            />
+          </Field>
+          <Field label="State" htmlFor="state" error={errors.state}>
+            <TextInput
+              id="state"
+              error={errors.state}
+              value={form.state}
+              onChange={(e) => update("state", e.target.value)}
+              autoComplete="address-level1"
+            />
+          </Field>
+          <Field label="Country" htmlFor="country" error={errors.country}>
+            <TextInput
+              id="country"
+              error={errors.country}
+              value={form.country}
+              onChange={(e) => update("country", e.target.value)}
+              autoComplete="country-name"
+            />
+          </Field>
+        </div>
+
+        <label
+          htmlFor="remote"
+          className="flex items-center gap-2 cursor-pointer select-none text-sm text-ink w-fit"
+        >
+          <input
+            id="remote"
+            type="checkbox"
+            checked={form.remote}
+            onChange={(e) => update("remote", e.target.checked)}
+            className="h-4 w-4 rounded border-hairline text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-navy"
+          />
+          Open to remote engagements
+        </label>
       </section>
 
       {/* Level */}
@@ -354,44 +417,6 @@ export function ApplicationForm() {
         )}
       </section>
 
-      {/* Location */}
-      <section className="flex flex-col gap-4">
-        <h2 className="font-display text-xl text-ink">Location</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="City" htmlFor="city" error={errors.city}>
-            <TextInput
-              id="city"
-              error={errors.city}
-              value={form.city}
-              onChange={(e) => update("city", e.target.value)}
-              autoComplete="address-level2"
-            />
-          </Field>
-          <Field label="State" htmlFor="state" error={errors.state}>
-            <TextInput
-              id="state"
-              error={errors.state}
-              value={form.state}
-              onChange={(e) => update("state", e.target.value)}
-              autoComplete="address-level1"
-            />
-          </Field>
-        </div>
-        <label
-          htmlFor="remote"
-          className="flex items-center gap-2 cursor-pointer select-none text-sm text-ink w-fit"
-        >
-          <input
-            id="remote"
-            type="checkbox"
-            checked={form.remote}
-            onChange={(e) => update("remote", e.target.checked)}
-            className="h-4 w-4 rounded border-hairline text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-navy"
-          />
-          Open to remote engagements
-        </label>
-      </section>
-
       {/* Industry experience */}
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-xl text-ink">Industry experience</h2>
@@ -421,6 +446,29 @@ export function ApplicationForm() {
             onChange={(e) => update("additionalNotes", e.target.value)}
           />
         </Field>
+      </section>
+
+      {/* Qualifying questions */}
+      <section className="flex flex-col gap-5">
+        <h2 className="font-display text-xl text-ink">A few questions</h2>
+        {QUALIFYING_QUESTIONS.map((q) => {
+          const value = form[q.field] as string;
+          const remaining = q.maxChars - value.length;
+          return (
+            <Field key={q.field} label={q.label} htmlFor={q.field} error={errors[q.field]}>
+              <TextArea
+                id={q.field}
+                error={errors[q.field]}
+                value={value}
+                maxLength={q.maxChars}
+                onChange={(e) => update(q.field, e.target.value as never)}
+              />
+              <p className="mt-1 text-xs text-muted text-right">
+                {remaining} characters left
+              </p>
+            </Field>
+          );
+        })}
       </section>
 
       {/* CV upload */}
@@ -466,21 +514,6 @@ export function ApplicationForm() {
             {errors.cv}
           </p>
         )}
-      </section>
-
-      {/* Qualifying questions */}
-      <section className="flex flex-col gap-5">
-        <h2 className="font-display text-xl text-ink">A few questions</h2>
-        {QUALIFYING_QUESTIONS.map((q) => (
-          <Field key={q.field} label={q.label} htmlFor={q.field} error={errors[q.field]}>
-            <TextArea
-              id={q.field}
-              error={errors[q.field]}
-              value={form[q.field] as string}
-              onChange={(e) => update(q.field, e.target.value as never)}
-            />
-          </Field>
-        ))}
       </section>
 
       {status === "error" && submitError && (

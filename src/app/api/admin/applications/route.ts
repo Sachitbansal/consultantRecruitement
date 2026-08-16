@@ -54,6 +54,7 @@ const LIST_SELECT = {
   industries: true,
   city: true,
   state: true,
+  country: true,
   remote: true,
   additionalNotes: true,
   qWhatIsGop: true,

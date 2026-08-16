@@ -49,6 +49,7 @@ interface ApplicationRow {
   industries: Industry[];
   city: string;
   state: string;
+  country: string;
   remote: boolean;
   additionalNotes: string | null;
   qWhatIsGop: string;
@@ -448,7 +449,7 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
                             <TruncatedList values={app.industries} labels={INDUSTRY_LABELS} />
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-ink">
-                            {app.city}, {app.state}
+                            {app.city}, {app.state}, {app.country}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-ink">
                             {app.remote ? "Yes" : "No"}

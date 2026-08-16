@@ -37,11 +37,14 @@ export const LEVEL_YEAR_RANGE_LABELS: Record<Level, string> = {
   PARTNER: "25+ yrs",
 };
 
+// PARTNER is deliberately absent: it stays in the Prisma enum and in the label
+// maps above (so any historical row still renders), but it is not offered on
+// the form and the API's zod schema — which validates against this array —
+// rejects it. Re-add the string here to bring the option back.
 export const LEVEL_OPTIONS: Level[] = [
   "CONSULTANT",
   "SENIOR_CONSULTANT",
   "PRINCIPAL",
-  "PARTNER",
 ];
 
 // ---------------------------------------------------------------------------

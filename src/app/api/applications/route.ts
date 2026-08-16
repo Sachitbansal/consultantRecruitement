@@ -90,6 +90,7 @@ const applicationSchema = z.object({
   skills: z.array(skillEnum).min(1, "Select at least one skill."),
   city: trimmed(120).transform(toTitleCase),
   state: trimmed(120).transform(toTitleCase),
+  country: trimmed(120).transform(toTitleCase),
   remote: z.union([z.literal("true"), z.literal("false")]).transform((v) => v === "true"),
   industries: z.array(industryEnum).min(1, "Select at least one industry."),
   additionalNotes: z
@@ -98,11 +99,14 @@ const applicationSchema = z.object({
     .max(5000, "Must be 5000 characters or fewer.")
     .optional()
     .or(z.literal("").transform(() => undefined)),
-  qWhatIsGop: trimmed(5000),
-  qWhyJoinGop: trimmed(5000),
-  qKeySkills: trimmed(5000),
-  qRelevantExperience: trimmed(5000),
-  qHowDeliver: trimmed(5000),
+  // Per-question caps. These are the authoritative limits — the textarea
+  // maxLength in ApplicationForm.tsx mirrors them but is trivially bypassed
+  // with a direct POST, so both sides must agree.
+  qWhatIsGop: trimmed(200),
+  qWhyJoinGop: trimmed(200),
+  qKeySkills: trimmed(300),
+  qRelevantExperience: trimmed(300),
+  qHowDeliver: trimmed(200),
 });
 
 type FieldErrors = Record<string, string>;
@@ -157,6 +161,7 @@ export async function POST(req: NextRequest) {
     skills: getAll("skills"),
     city: String(form.get("city") ?? ""),
     state: String(form.get("state") ?? ""),
+    country: String(form.get("country") ?? ""),
     remote: String(form.get("remote") ?? "false"),
     industries: getAll("industries"),
     additionalNotes: String(form.get("additionalNotes") ?? ""),
@@ -248,6 +253,7 @@ export async function POST(req: NextRequest) {
         skills: data.skills as never,
         city: data.city,
         state: data.state,
+        country: data.country,
         remote: data.remote,
         industries: data.industries as never,
         additionalNotes: data.additionalNotes ?? null,

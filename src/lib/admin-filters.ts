@@ -55,6 +55,7 @@ export const adminFilterQuerySchema = z.object({
     .optional()
     .transform((v) => (v === undefined ? undefined : v === "true")),
   state: z.string().trim().min(1).max(120).optional(),
+  country: z.string().trim().min(1).max(120).optional(),
   city: z.string().trim().min(1).max(120).optional(),
   search: z.string().trim().min(1).max(200).optional(),
   page: z.coerce.number().int().min(1).max(1_000_000).optional().default(1),
@@ -79,6 +80,7 @@ export function parseAdminFilterQuery(searchParams: URLSearchParams): AdminFilte
     industries: searchParams.getAll("industries"),
     remote: searchParams.get("remote") ?? undefined,
     state: searchParams.get("state") ?? undefined,
+    country: searchParams.get("country") ?? undefined,
     city: searchParams.get("city") ?? undefined,
     search: searchParams.get("search") ?? undefined,
     page: searchParams.get("page") ?? undefined,
@@ -107,6 +109,9 @@ export function buildApplicationWhere(
   }
   if (query.remote !== undefined) {
     AND.push({ remote: query.remote });
+  }
+  if (query.country) {
+    AND.push({ country: { equals: query.country, mode: "insensitive" } });
   }
   if (query.state) {
     AND.push({ state: { equals: query.state, mode: "insensitive" } });

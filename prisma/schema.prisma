@@ -89,9 +89,10 @@ model Application {
   skills     Skill[]
   industries Industry[]
 
-  city   String
-  state  String // free text, intentionally no enum
-  remote Boolean @default(false)
+  city    String
+  state   String // free text, intentionally no enum
+  country String  @default("India") // free text; default backfills pre-existing rows
+  remote  Boolean @default(false)
 
   additionalNotes String? @db.Text
 
@@ -131,6 +132,7 @@ model Application {
   @@index([level])
   @@index([city])
   @@index([state])
+  @@index([country])
   @@index([remote])
   @@index([createdAt])
   @@index([fullName])
