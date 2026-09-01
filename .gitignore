@@ -38,3 +38,5 @@ next-env.d.ts
 
 # uploaded CVs (on-disk volume, not committed)
 /uploads
+
+docker-compose.yml

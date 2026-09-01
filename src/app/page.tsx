@@ -1,118 +1,192 @@
-import Link from "next/link";
+import ContactForm from "@/components/ContactForm";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import HeroVisual from "@/components/HeroVisual";
+import Reveal from "@/components/Reveal";
+import {
+  changes,
+  contact,
+  engage,
+  fit,
+  hero,
+  moment,
+  returns,
+  scale,
+  steps,
+} from "@/lib/gop-content";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="min-h-screen bg-background">
-      {/* Hero */}
-      <section className="border-b border-hairline">
-        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
-          <p className="font-sans text-sm font-medium tracking-wide text-navy uppercase mb-6">
-            GOP &mdash; Growth Operating Partners
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-ink max-w-3xl">
-            Operator-led Growth. Investor-ready Outcomes.
-          </h1>
-          {/* PLACEHOLDER COPY: confirm Hindi tagline placement/translation with client before launch */}
-          <p className="font-sans text-base text-muted mt-2">
-            Private Equity se pehle bhi. Private Equity ke baad bhi.
-          </p>
-          <p className="font-sans text-lg text-ink/80 max-w-2xl mt-8 leading-relaxed">
-            {/* PLACEHOLDER COPY: replace with final positioning paragraph */}
-            GOP staffs experienced operators onto live delivery engagements
-            for growth-stage and PE-backed businesses. No bench, no
-            generalist headcount &mdash; you are brought in to run a specific
-            function, hit a specific number, and hand over a business that
-            runs without you.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href="/apply"
-              className="inline-flex items-center justify-center rounded-md bg-navy px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-navy-deep"
-            >
-              Apply as a Consultant
-            </Link>
-          </div>
-        </div>
-      </section>
+    <>
+      <span id="top" />
+      <Header />
 
-      {/* Who GOP is */}
-      <section className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-        <h2 className="font-display text-2xl sm:text-3xl text-ink mb-6">
-          What we do
-        </h2>
-        {/* PLACEHOLDER COPY: replace with final "About GOP" narrative from client */}
-        <div className="grid sm:grid-cols-2 gap-8 font-sans text-ink/80 leading-relaxed">
-          <p>
-            GOP is an operator-led growth firm. We work alongside founders,
-            CEOs, and PE-backed management teams to deliver on the plans
-            everyone agrees on but rarely has the bandwidth to execute
-            &mdash; sales, operations, finance, and organisation design.
-          </p>
-          <p>
-            We don&apos;t sell decks. We put an operator on the ground with
-            the client, with a clear scope and a clear number to hit. Our
-            consultants have run functions, not just advised on them
-            &mdash; that&apos;s the entire premise of the firm.
-          </p>
-        </div>
-      </section>
-
-      {/* Dark section: why join */}
-      <section className="bg-navy-deep text-white">
-        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-          <h2 className="font-display text-2xl sm:text-3xl mb-8">
-            Why operators join GOP
-          </h2>
-          {/* PLACEHOLDER COPY: replace with final value props from client */}
-          <div className="grid sm:grid-cols-3 gap-8 font-sans text-white/80 leading-relaxed">
+      <main id="main">
+        {/* ------------------------------------------------------- hero */}
+        <section className="hero">
+          <div className="wrap hero-grid">
             <div>
-              <h3 className="font-display text-lg text-white mb-2">
-                Real delivery work
-              </h3>
-              <p>
-                You run a function inside a live business, not a slide
-                review. The engagement is judged on the number, not the
-                narrative.
-              </p>
+              <span className="eyebrow">{hero.eyebrow}</span>
+              <h1>{hero.heading}</h1>
+              <p className="hero-sub">{hero.sub}</p>
+              <div className="hero-ctas">
+                <a className="btn btn-primary" href={hero.primary.href}>
+                  {hero.primary.label}
+                </a>
+                <a className="btn btn-ghost" href={hero.secondary.href}>
+                  {hero.secondary.label}
+                </a>
+              </div>
             </div>
-            <div>
-              <h3 className="font-display text-lg text-white mb-2">
-                Built for experienced operators
-              </h3>
-              <p>
-                Roles are scoped for people with 5 to 25+ years of hands-on
-                functional experience &mdash; not entry-level consulting.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-display text-lg text-white mb-2">
-                Flexible engagement model
-              </h3>
-              <p>
-                Work remote or on-site, on the functions and industries you
-                already know, at the cadence the engagement calls for.
-              </p>
+            <div className="hero-visual">
+              <HeroVisual />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Closing CTA */}
-      <section className="mx-auto max-w-5xl px-6 py-16 sm:py-24 text-center">
-        <h2 className="font-display text-2xl sm:text-3xl text-ink mb-4">
-          Ready to apply?
-        </h2>
-        <p className="font-sans text-muted max-w-xl mx-auto mb-8">
-          The application takes about ten minutes. Have your CV ready before
-          you start.
-        </p>
-        <Link
-          href="/apply"
-          className="inline-flex items-center justify-center rounded-md bg-navy px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-navy-deep"
-        >
-          Start Application
-        </Link>
-      </section>
-    </main>
+        {/* -------------------------------------------- the moment you're in */}
+        <section className="moment band-dark">
+          <div className="wrap-narrow">
+            <Reveal>
+              <span className="eyebrow on-dark">{moment.eyebrow}</span>
+              {moment.paragraphs.map((text) => (
+                <p key={text}>{text}</p>
+              ))}
+              <p className="pull">{moment.pull}</p>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------- what we do */}
+        <section id="what-we-do">
+          <div className="wrap">
+            <Reveal className="section-head">
+              <span className="eyebrow">{scale.eyebrow}</span>
+              <h2>{scale.heading}</h2>
+              <p>{scale.intro}</p>
+            </Reveal>
+
+            <div className="scale-grid">
+              {scale.items.map((item) => (
+                <article className="scale-card" key={item.n}>
+                  <span className="n">{item.n}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* ----------------------------------------------- what changes */}
+        <section>
+          <div className="wrap">
+            <Reveal className="section-head">
+              <span className="eyebrow">{changes.eyebrow}</span>
+              <h2>{changes.heading}</h2>
+            </Reveal>
+
+            <div className="changes-grid">
+              {changes.columns.map((column, i) => (
+                <Reveal className="changes-col" key={column.title} delay={i * 80}>
+                  <h3>{column.title}</h3>
+                  <ul>
+                    {column.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------ how we work */}
+        <section id="how-we-work">
+          <div className="wrap">
+            <Reveal className="engage">
+              <span className="eyebrow">{engage.eyebrow}</span>
+              <p className="statement">{engage.statement}</p>
+              <p className="sub">{engage.sub}</p>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------- the return */}
+        <section>
+          <div className="wrap-narrow">
+            <Reveal>
+              <span className="eyebrow">{returns.eyebrow}</span>
+              <blockquote className="return-quote">{returns.quote}</blockquote>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------- how it starts */}
+        <section>
+          <div className="wrap">
+            <Reveal className="section-head">
+              <span className="eyebrow">{steps.eyebrow}</span>
+              <h2>{steps.heading}</h2>
+            </Reveal>
+
+            <div className="steps">
+              {steps.items.map((step, i) => (
+                <Reveal className="step" key={step.title} delay={i * 80}>
+                  <div className="step-num" aria-hidden="true">
+                    {i + 1}
+                  </div>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------ who we work with */}
+        <section id="who-we-work-with" className="fit band-navy">
+          <div className="wrap">
+            <div className="fit-text">
+              <span className="eyebrow on-dark">{fit.eyebrow}</span>
+              <p>{fit.statement}</p>
+            </div>
+            <a className="btn btn-ghost on-dark" href={fit.cta.href}>
+              {fit.cta.label}
+            </a>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------- contact */}
+        <section id="contact">
+          <div className="wrap contact-grid">
+            <div className="contact-info">
+              <span className="eyebrow">{contact.eyebrow}</span>
+              <h2>{contact.heading}</h2>
+              <p className="sub">{contact.sub}</p>
+
+              <div className="contact-detail">
+                <div>
+                  <span className="label">Email</span>
+                  <span className="value">
+                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                  </span>
+                </div>
+                <div>
+                  <span className="label">Response time</span>
+                  <span className="value">{contact.responseTime}</span>
+                </div>
+              </div>
+            </div>
+
+            <ContactForm />
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
   );
 }

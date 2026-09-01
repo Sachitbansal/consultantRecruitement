@@ -45,6 +45,20 @@ services:
       # --email/--password as CLI args, so the admin password never sits in a
       # long-lived container environment. See scripts/seed-admin.mjs.
       UPLOADS_DIR: /app/uploads
+      # Landing-page contact form (ported from the old cPanel contact.php).
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      CONTACT_FROM_EMAIL: ${CONTACT_FROM_EMAIL}
+      CONTACT_FROM_NAME: ${CONTACT_FROM_NAME}
+      CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL}
+      CONTACT_TO_NAME: ${CONTACT_TO_NAME}
+      CONTACT_ALLOWED_ORIGINS: ${CONTACT_ALLOWED_ORIGINS}
+      CONTACT_SEND_ACK: ${CONTACT_SEND_ACK}
+      CONTACT_VERIFY_EMAIL_DOMAIN: ${CONTACT_VERIFY_EMAIL_DOMAIN}
+      CONTACT_RATE_LIMIT: ${CONTACT_RATE_LIMIT}
+      CONTACT_RATE_WINDOW_SEC: ${CONTACT_RATE_WINDOW_SEC}
       NODE_ENV: production
       FORCE_INSECURE_COOKIES: ${FORCE_INSECURE_COOKIES:-false}
     ports:

@@ -21,8 +21,8 @@ const config: Config = {
         hairline: "#DCE0E6",
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "serif"],
-        sans: ["var(--font-inter)", "sans-serif"],
+        display: ["var(--font-display)", "serif"],
+        sans: ["var(--font-sans)", "sans-serif"],
       },
     },
   },

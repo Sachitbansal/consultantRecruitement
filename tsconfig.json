@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    // ES2020 (not the create-next-app default of ES5) because the landing page
+    // and contact endpoint use unicode-flag regexes, which need ES6+.
+    "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,7 +21,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      // The ported landing components import their logo as a static asset
+      // (`@/public/gop-mark.png`). In the original GOP repo `@/` pointed at the
+      // project root; here it points at src/, so public/ needs its own alias.
+      "@/public/*": ["./public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
