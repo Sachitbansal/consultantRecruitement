@@ -17,7 +17,10 @@ import {
 
 export default function Page() {
   return (
-    <>
+    // .gop-site scopes the ported landing-page CSS so its bare-element rules
+    // (notably `section { padding: 104px 0 }`) cannot leak into /apply or
+    // /admin, which are built with Tailwind and use <section> for grouping.
+    <div className="gop-site">
       <span id="top" />
       <Header />
 
@@ -187,6 +190,6 @@ export default function Page() {
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }

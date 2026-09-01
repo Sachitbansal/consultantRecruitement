@@ -143,7 +143,10 @@ p {
   padding: 0 40px;
 }
 
-section {
+/* Scoped to the landing page. A bare `section` selector also matched the
+   Tailwind-built /apply and /admin pages, which use <section> for plain
+   grouping — that injected 104px of padding between every form group. */
+.gop-site section {
   padding: var(--section-y) 0;
 }
 
