@@ -1,4 +1,10 @@
-import type { Level, DeliveryFunction, Skill, Industry } from "@prisma/client";
+import type {
+  Level,
+  TravelWillingness,
+  PnlBand,
+  ClientRevenueBand,
+  ConsultantStatus,
+} from "@prisma/client";
 
 /**
  * Shared filter-state -> URLSearchParams serialization for the admin
@@ -8,29 +14,40 @@ import type { Level, DeliveryFunction, Skill, Industry } from "@prisma/client";
  * state into query params.
  *
  * Mirrors the server-side contract in src/lib/admin-filters.ts: multi-value
- * params are repeated (?level=A&level=B), remote is "true"/"false" or
- * omitted, search/city/state are single strings.
+ * params are repeated (?level=A&level=B), openToRemote is "true"/"false" or
+ * omitted, search/city/state/country are single strings, pillarIds/
+ * subTagIds/industryIds are repeated numeric params.
  */
 
 export interface AdminFilterState {
+  status: ConsultantStatus[];
   level: Level[];
-  functions: DeliveryFunction[];
-  skills: Skill[];
-  industries: Industry[];
-  remote: "any" | "true" | "false";
+  travelWillingness: TravelWillingness[];
+  maxPnlBand: PnlBand[];
+  clientRevenueBands: ClientRevenueBand[];
+  pillarIds: number[];
+  subTagIds: number[];
+  industryIds: number[];
+  openToRemote: "any" | "true" | "false";
   city: string;
   state: string;
+  country: string;
   search: string;
 }
 
 export const EMPTY_FILTER_STATE: AdminFilterState = {
+  status: [],
   level: [],
-  functions: [],
-  skills: [],
-  industries: [],
-  remote: "any",
+  travelWillingness: [],
+  maxPnlBand: [],
+  clientRevenueBands: [],
+  pillarIds: [],
+  subTagIds: [],
+  industryIds: [],
+  openToRemote: "any",
   city: "",
   state: "",
+  country: "",
   search: "",
 };
 
@@ -42,13 +59,18 @@ export function buildFilterParams(
   extra?: { page?: number; pageSize?: number },
 ): URLSearchParams {
   const params = new URLSearchParams();
+  for (const v of filters.status) params.append("status", v);
   for (const v of filters.level) params.append("level", v);
-  for (const v of filters.functions) params.append("functions", v);
-  for (const v of filters.skills) params.append("skills", v);
-  for (const v of filters.industries) params.append("industries", v);
-  if (filters.remote !== "any") params.set("remote", filters.remote);
+  for (const v of filters.travelWillingness) params.append("travelWillingness", v);
+  for (const v of filters.maxPnlBand) params.append("maxPnlBand", v);
+  for (const v of filters.clientRevenueBands) params.append("clientRevenueBands", v);
+  for (const v of filters.pillarIds) params.append("pillarIds", String(v));
+  for (const v of filters.subTagIds) params.append("subTagIds", String(v));
+  for (const v of filters.industryIds) params.append("industryIds", String(v));
+  if (filters.openToRemote !== "any") params.set("openToRemote", filters.openToRemote);
   if (filters.city.trim()) params.set("city", filters.city.trim());
   if (filters.state.trim()) params.set("state", filters.state.trim());
+  if (filters.country.trim()) params.set("country", filters.country.trim());
   if (filters.search.trim()) params.set("search", filters.search.trim());
   if (extra?.page) params.set("page", String(extra.page));
   if (extra?.pageSize) params.set("pageSize", String(extra.pageSize));
@@ -58,13 +80,18 @@ export function buildFilterParams(
 /** Count of active filter categories/values, for the "N filters active" UI. */
 export function countActiveFilters(filters: AdminFilterState): number {
   return (
+    filters.status.length +
     filters.level.length +
-    filters.functions.length +
-    filters.skills.length +
-    filters.industries.length +
-    (filters.remote !== "any" ? 1 : 0) +
+    filters.travelWillingness.length +
+    filters.maxPnlBand.length +
+    filters.clientRevenueBands.length +
+    filters.pillarIds.length +
+    filters.subTagIds.length +
+    filters.industryIds.length +
+    (filters.openToRemote !== "any" ? 1 : 0) +
     (filters.city.trim() ? 1 : 0) +
     (filters.state.trim() ? 1 : 0) +
+    (filters.country.trim() ? 1 : 0) +
     (filters.search.trim() ? 1 : 0)
   );
 }

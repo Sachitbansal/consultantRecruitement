@@ -10,16 +10,18 @@ interface ChipProps {
 /**
  * A single toggle rendered as a card-style chip, backed by a real
  * checkbox/radio input for accessibility and keyboard support. The input is
- * visually hidden but still focusable and screen-reader-visible.
+ * visually hidden but still focusable and screen-reader-visible; the focus
+ * ring is drawn on the label via `has-[:focus-visible]` so the whole chip
+ * lights up rather than an invisible box inside it.
  */
 export function Chip({ id, name, label, checked, onChange, type = "checkbox" }: ChipProps) {
   return (
     <label
       htmlFor={id}
-      className={`cursor-pointer select-none rounded-lg border px-3.5 py-2 text-sm transition-colors ${
+      className={`inline-flex cursor-pointer select-none items-center rounded-full border px-3.5 py-1.5 text-sm leading-6 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-navy ${
         checked
           ? "border-navy bg-navy text-white"
-          : "border-hairline bg-white text-ink hover:border-navy/50"
+          : "border-hairline bg-white text-ink hover:border-navy/50 hover:bg-navy/[0.03]"
       }`}
     >
       <input
@@ -28,11 +30,9 @@ export function Chip({ id, name, label, checked, onChange, type = "checkbox" }: 
         name={name}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="sr-only peer"
+        className="sr-only"
       />
-      <span className="peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-navy rounded">
-        {label}
-      </span>
+      {label}
     </label>
   );
 }

@@ -1,16 +1,21 @@
 "use client";
 
 import { Fragment, useEffect, useMemo, useState } from "react";
-import type { Level, DeliveryFunction, Skill, Industry } from "@prisma/client";
+import type { Level, PnlBand, ClientRevenueBand, ConsultantStatus } from "@prisma/client";
 import {
-  LEVEL_OPTIONS,
   LEVEL_LABELS,
-  DELIVERY_FUNCTION_OPTIONS,
-  DELIVERY_FUNCTION_LABELS,
-  SKILL_LABELS,
-  SKILL_CLUSTERS,
-  INDUSTRY_OPTIONS,
-  INDUSTRY_LABELS,
+  TRAVEL_WILLINGNESS_OPTIONS,
+  TRAVEL_WILLINGNESS_LABELS,
+  PNL_BAND_OPTIONS,
+  PNL_BAND_LABELS,
+  CLIENT_REVENUE_BAND_OPTIONS,
+  CLIENT_REVENUE_BAND_LABELS,
+  CONSULTANT_STATUS_OPTIONS,
+  CONSULTANT_STATUS_LABELS,
+  LEVEL_OPTIONS,
+  CASE_STUDY_ROLE_LABELS,
+  REFERENCEABLE_LABELS,
+  ENGAGEMENT_TYPE_LABELS,
 } from "@/lib/constants";
 import {
   buildFilterParams,
@@ -18,55 +23,119 @@ import {
   EMPTY_FILTER_STATE,
   type AdminFilterState,
 } from "@/lib/admin-query";
-import { ChipGroup } from "@/components/Chip";
+import { Chip } from "@/components/Chip";
 import { RadioCardGroup } from "@/components/RadioCardGroup";
 import { TextInput } from "@/components/TextInput";
 
 const PAGE_SIZE = 25;
 
-const QUALIFYING_QUESTIONS: { field: string; label: string }[] = [
-  { field: "qWhatIsGop", label: "What is GOP?" },
-  { field: "qWhyJoinGop", label: "Why do you want to be part of GOP?" },
-  {
-    field: "qKeySkills",
-    label: "What are your key skills that make you the go-to person for this role?",
-  },
-  {
-    field: "qRelevantExperience",
-    label: "What's your relevant experience that qualifies you for this role?",
-  },
-  { field: "qHowDeliver", label: "How will you deliver your services?" },
-];
+// ---------------------------------------------------------------------------
+// Local taxonomy type — mirrors GET /api/taxonomy exactly (see
+// src/lib/taxonomy.ts). Not imported from there directly since that module
+// is server-only (pulls in prisma/next-cache).
+// ---------------------------------------------------------------------------
+interface TaxonomySubTag {
+  id: number;
+  code: string;
+  name: string;
+}
+interface TaxonomyPillar {
+  id: number;
+  code: string;
+  name: string;
+  subTags: TaxonomySubTag[];
+}
+interface TaxonomyIndustryNode {
+  id: number;
+  code: string;
+  name: string;
+  children: TaxonomyIndustryNode[];
+}
+interface TaxonomyData {
+  pillars: TaxonomyPillar[];
+  industries: TaxonomyIndustryNode[];
+}
 
-interface ApplicationRow {
+// ---------------------------------------------------------------------------
+// Row shape — mirrors shapeConsultantRow() in src/lib/admin-consultant-shape.ts.
+// ---------------------------------------------------------------------------
+interface CapabilityRow {
+  tagId: number;
+  tagCode: string;
+  tagName: string;
+  pillarId: number;
+  pillarCode: string;
+  pillarName: string;
+}
+interface IndustryRow {
+  industryId: number;
+  code: string;
+  name: string;
+  parentIndustryId: number | null;
+}
+interface CaseStudyRow {
   id: string;
+  title: string;
+  clientIndustryId: number;
+  clientIndustryName: string;
+  clientSizeBand: ClientRevenueBand;
+  role: string;
+  situationText: string;
+  interventionText: string;
+  outcomeText: string;
+  durationMonths: number;
+  referenceable: string;
+  createdAt: string;
+  pillars: { pillarId: number; pillarCode: string; pillarName: string }[];
+}
+interface EngagementProfileRow {
+  engagementType: string | null;
+  availabilityDaysWeek: number | null;
+  noticePeriodDays: number | null;
+  rateBand: string | null;
+  currentlyEngaged: boolean | null;
+  exclusivityNotes: string | null;
+  lastUpdated: string;
+}
+interface ConsultantRow {
+  id: string;
+  consultantCode: string;
   fullName: string;
   email: string;
-  phone: string;
-  level: Level;
-  functions: DeliveryFunction[];
-  skills: Skill[];
-  industries: Industry[];
-  city: string;
-  state: string;
-  country: string;
-  remote: boolean;
-  additionalNotes: string | null;
-  qWhatIsGop: string;
-  qWhyJoinGop: string;
-  qKeySkills: string;
-  qRelevantExperience: string;
-  qHowDeliver: string;
-  cvFileName: string | null;
-  cvMimeType: string | null;
-  cvSizeBytes: number | null;
+  mobile: string | null;
+  linkedinUrl: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  openToRemote: boolean | null;
+  travelWillingness: string | null;
+  level: Level | null;
+  totalYearsExp: number | null;
+  operatingYearsExp: number | null;
+  advisoryYearsExp: number | null;
+  maxTeamManaged: number | null;
+  maxPnlBand: PnlBand | null;
+  clientRevenueBands: ClientRevenueBand[];
+  status: ConsultantStatus;
+  dateInvited: string | null;
+  dateApplied: string | null;
+  dateApproved: string | null;
+  consentFlag: boolean;
+  reasonForJoining: string | null;
+  deliveryStyle: string | null;
   createdAt: string;
   updatedAt: string;
+  invitedBy: { id: string; consultantCode: string; fullName: string } | null;
   hasCv: boolean;
+  hasDeck: boolean;
+  capabilities: CapabilityRow[];
+  industries: IndustryRow[];
+  caseStudies: CaseStudyRow[];
+  engagementProfile: EngagementProfileRow | null;
 }
 
 interface ListResponse {
-  applications: ApplicationRow[];
+  consultants: ConsultantRow[];
   total: number;
   page: number;
   pageSize: number;
@@ -80,36 +149,34 @@ const remoteLabels: Record<"any" | "true" | "false", string> = {
   false: "On-site",
 };
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
   const d = new Date(iso);
   return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
 
+function dash(v: string | number | null | undefined): string {
+  if (v === null || v === undefined || v === "") return "—";
+  return String(v);
+}
+
 /** Renders a capped list of chips ("first N + more") with a title tooltip
- * carrying the full list, so long multi-selects don't blow out row height. */
-function TruncatedList({
-  values,
-  labels,
-  max = 2,
-}: {
-  values: string[];
-  labels: Record<string, string>;
-  max?: number;
-}) {
+ * carrying the full list, so long multi-value cells don't blow out row
+ * height. */
+function TruncatedList({ values, max = 2 }: { values: string[]; max?: number }) {
   if (values.length === 0) {
     return <span className="text-muted text-xs">&mdash;</span>;
   }
   const shown = values.slice(0, max);
   const rest = values.length - shown.length;
-  const fullTitle = values.map((v) => labels[v] ?? v).join(", ");
   return (
-    <span className="flex flex-wrap gap-1" title={fullTitle}>
+    <span className="flex flex-wrap gap-1" title={values.join(", ")}>
       {shown.map((v) => (
         <span
           key={v}
           className="inline-block rounded bg-gray-light px-1.5 py-0.5 text-xs text-ink whitespace-nowrap"
         >
-          {labels[v] ?? v}
+          {v}
         </span>
       ))}
       {rest > 0 && (
@@ -121,9 +188,21 @@ function TruncatedList({
   );
 }
 
+function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">{label}</p>
+      <div className="text-sm text-ink leading-relaxed">{value}</div>
+    </div>
+  );
+}
+
 export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   const [filters, setFilters] = useState<AdminFilterState>(EMPTY_FILTER_STATE);
   const [searchInput, setSearchInput] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [stateInput, setStateInput] = useState("");
+  const [countryInput, setCountryInput] = useState("");
   const [page, setPage] = useState(1);
   const [data, setData] = useState<ListResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -131,7 +210,16 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  // Debounce the free-text search box into filters.search.
+  const [taxonomy, setTaxonomy] = useState<TaxonomyData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/taxonomy", { credentials: "same-origin" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => setTaxonomy(body))
+      .catch(() => setTaxonomy(null));
+  }, []);
+
+  // Debounce free-text filters.
   useEffect(() => {
     const t = setTimeout(() => {
       setFilters((f) => ({ ...f, search: searchInput }));
@@ -139,27 +227,45 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
     }, 350);
     return () => clearTimeout(t);
   }, [searchInput]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setFilters((f) => ({ ...f, city: cityInput }));
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [cityInput]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setFilters((f) => ({ ...f, state: stateInput }));
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [stateInput]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setFilters((f) => ({ ...f, country: countryInput }));
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [countryInput]);
 
   const queryString = useMemo(
     () => buildFilterParams(filters, { page, pageSize: PAGE_SIZE }).toString(),
     [filters, page],
   );
-
   const exportParams = useMemo(() => buildFilterParams(filters), [filters]);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetch(`/api/admin/applications?${queryString}`, { credentials: "same-origin" })
+    fetch(`/api/admin/consultants?${queryString}`, { credentials: "same-origin" })
       .then(async (res) => {
         if (res.status === 401) {
           window.location.href = "/admin/login";
           return null;
         }
-        if (!res.ok) {
-          throw new Error("Failed to load applications.");
-        }
+        if (!res.ok) throw new Error("Failed to load consultants.");
         return (await res.json()) as ListResponse;
       })
       .then((body) => {
@@ -186,9 +292,21 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
     setPage(1);
   }
 
+  function toggleMultiNumber(key: "pillarIds" | "subTagIds" | "industryIds", value: number) {
+    setFilters((f) => {
+      const arr = f[key];
+      const next = arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
+      return { ...f, [key]: next };
+    });
+    setPage(1);
+  }
+
   function clearAllFilters() {
     setFilters(EMPTY_FILTER_STATE);
     setSearchInput("");
+    setCityInput("");
+    setStateInput("");
+    setCountryInput("");
     setPage(1);
   }
 
@@ -202,7 +320,7 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   }
 
   const activeCount = countActiveFilters(filters);
-  const applications = data?.applications ?? [];
+  const consultants = data?.consultants ?? [];
   const totalPages = data?.totalPages ?? 1;
   const total = data?.total ?? 0;
 
@@ -211,10 +329,8 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
       <header className="border-b border-hairline bg-white">
         <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <p className="font-sans text-xs font-medium tracking-wide text-navy uppercase">
-              GOP Admin
-            </p>
-            <h1 className="font-display text-xl text-ink">Applications</h1>
+            <p className="font-sans text-xs font-medium tracking-wide text-navy uppercase">GOP Admin</p>
+            <h1 className="font-display text-xl text-ink">Consultants</h1>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted hidden sm:inline">{adminEmail}</span>
@@ -261,90 +377,111 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
             </label>
             <TextInput
               id="search"
-              placeholder="Name, email, city, or state"
+              placeholder="Name, email, or city"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-3 gap-5">
             <div>
               <label htmlFor="city" className="text-sm font-medium text-ink block mb-1.5">
                 City
               </label>
-              <TextInput
-                id="city"
-                value={filters.city}
-                onChange={(e) => {
-                  setFilters((f) => ({ ...f, city: e.target.value }));
-                  setPage(1);
-                }}
-              />
+              <TextInput id="city" value={cityInput} onChange={(e) => setCityInput(e.target.value)} />
             </div>
             <div>
               <label htmlFor="state" className="text-sm font-medium text-ink block mb-1.5">
                 State
               </label>
-              <TextInput
-                id="state"
-                value={filters.state}
-                onChange={(e) => {
-                  setFilters((f) => ({ ...f, state: e.target.value }));
-                  setPage(1);
-                }}
-              />
+              <TextInput id="state" value={stateInput} onChange={(e) => setStateInput(e.target.value)} />
+            </div>
+            <div>
+              <label htmlFor="country" className="text-sm font-medium text-ink block mb-1.5">
+                Country
+              </label>
+              <TextInput id="country" value={countryInput} onChange={(e) => setCountryInput(e.target.value)} />
             </div>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-ink mb-1.5">Level</p>
-            <ChipGroup
-              name="filter-level"
-              options={LEVEL_OPTIONS}
-              labels={LEVEL_LABELS}
-              selected={filters.level}
-              onToggle={(v) => toggleMulti<Level>("level", v)}
-            />
-          </div>
-
-          <div>
-            <p className="text-sm font-medium text-ink mb-1.5">Delivery function</p>
-            <ChipGroup
-              name="filter-functions"
-              options={DELIVERY_FUNCTION_OPTIONS}
-              labels={DELIVERY_FUNCTION_LABELS}
-              selected={filters.functions}
-              onToggle={(v) => toggleMulti<DeliveryFunction>("functions", v)}
-            />
-          </div>
-
-          <div>
-            <p className="text-sm font-medium text-ink mb-2">Skills</p>
-            <div className="flex flex-col gap-3">
-              {Object.entries(SKILL_CLUSTERS).map(([cluster, skills]) => (
-                <div key={cluster}>
-                  <p className="text-xs text-muted mb-1">{cluster}</p>
-                  <ChipGroup
-                    name={`filter-skills-${cluster}`}
-                    options={skills}
-                    labels={SKILL_LABELS}
-                    selected={filters.skills}
-                    onToggle={(v) => toggleMulti<Skill>("skills", v)}
-                  />
-                </div>
+            <p className="text-sm font-medium text-ink mb-1.5">Status</p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Status">
+              {CONSULTANT_STATUS_OPTIONS.map((s) => (
+                <Chip
+                  key={s}
+                  id={`filter-status-${s}`}
+                  name="filter-status"
+                  label={CONSULTANT_STATUS_LABELS[s]}
+                  checked={filters.status.includes(s)}
+                  onChange={() => toggleMulti<ConsultantStatus>("status", s)}
+                />
               ))}
             </div>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-ink mb-1.5">Industry experience</p>
-            <ChipGroup
-              name="filter-industries"
-              options={INDUSTRY_OPTIONS}
-              labels={INDUSTRY_LABELS}
-              selected={filters.industries}
-              onToggle={(v) => toggleMulti<Industry>("industries", v)}
-            />
+            <p className="text-sm font-medium text-ink mb-1.5">Level</p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Level">
+              {LEVEL_OPTIONS.map((l) => (
+                <Chip
+                  key={l}
+                  id={`filter-level-${l}`}
+                  name="filter-level"
+                  label={LEVEL_LABELS[l]}
+                  checked={filters.level.includes(l)}
+                  onChange={() => toggleMulti<Level>("level", l)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-ink mb-1.5">Travel willingness</p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Travel willingness">
+              {TRAVEL_WILLINGNESS_OPTIONS.map((t) => (
+                <Chip
+                  key={t}
+                  id={`filter-travel-${t}`}
+                  name="filter-travel"
+                  label={TRAVEL_WILLINGNESS_LABELS[t]}
+                  checked={filters.travelWillingness.includes(t)}
+                  onChange={() => toggleMulti("travelWillingness", t)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-ink mb-1.5">Largest P&amp;L / budget owned</p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="P&L band">
+              {PNL_BAND_OPTIONS.map((p) => (
+                <Chip
+                  key={p}
+                  id={`filter-pnl-${p}`}
+                  name="filter-pnl"
+                  label={PNL_BAND_LABELS[p]}
+                  checked={filters.maxPnlBand.includes(p)}
+                  onChange={() => toggleMulti<PnlBand>("maxPnlBand", p)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-ink mb-1.5">Client revenue band</p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Client revenue band">
+              {CLIENT_REVENUE_BAND_OPTIONS.map((b) => (
+                <Chip
+                  key={b}
+                  id={`filter-revenue-${b}`}
+                  name="filter-revenue"
+                  label={CLIENT_REVENUE_BAND_LABELS[b]}
+                  checked={filters.clientRevenueBands.includes(b)}
+                  onChange={() => toggleMulti<ClientRevenueBand>("clientRevenueBands", b)}
+                />
+              ))}
+            </div>
           </div>
 
           <div>
@@ -353,19 +490,83 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
               name="filter-remote"
               options={remoteOptions}
               labels={remoteLabels}
-              value={filters.remote}
+              value={filters.openToRemote}
               onChange={(v) => {
-                setFilters((f) => ({ ...f, remote: v }));
+                setFilters((f) => ({ ...f, openToRemote: v }));
                 setPage(1);
               }}
             />
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-ink mb-2">Delivery pillars &amp; sub-tags</p>
+            <div className="flex flex-col gap-3">
+              {taxonomy?.pillars.map((pillar) => (
+                <div key={pillar.id}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Chip
+                      id={`filter-pillar-${pillar.id}`}
+                      name="filter-pillars"
+                      label={pillar.name}
+                      checked={filters.pillarIds.includes(pillar.id)}
+                      onChange={() => toggleMultiNumber("pillarIds", pillar.id)}
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2 pl-4 border-l-2 border-hairline ml-2">
+                    {pillar.subTags.map((tag) => (
+                      <Chip
+                        key={tag.id}
+                        id={`filter-subtag-${tag.id}`}
+                        name="filter-subtags"
+                        label={tag.name}
+                        checked={filters.subTagIds.includes(tag.id)}
+                        onChange={() => toggleMultiNumber("subTagIds", tag.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {!taxonomy && <p className="text-sm text-muted">Loading…</p>}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-ink mb-2">Industries</p>
+            <div className="flex flex-col gap-3">
+              {taxonomy?.industries.map((sector) => (
+                <div key={sector.id}>
+                  <Chip
+                    id={`filter-industry-${sector.id}`}
+                    name="filter-industries"
+                    label={sector.name}
+                    checked={filters.industryIds.includes(sector.id)}
+                    onChange={() => toggleMultiNumber("industryIds", sector.id)}
+                  />
+                  {sector.children.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pl-4 border-l-2 border-hairline ml-2 mt-1">
+                      {sector.children.map((child) => (
+                        <Chip
+                          key={child.id}
+                          id={`filter-industry-${child.id}`}
+                          name="filter-industries"
+                          label={child.name}
+                          checked={filters.industryIds.includes(child.id)}
+                          onChange={() => toggleMultiNumber("industryIds", child.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {!taxonomy && <p className="text-sm text-muted">Loading…</p>}
+            </div>
           </div>
         </section>
 
         {/* Results header / export */}
         <section className="flex items-center justify-between gap-4 flex-wrap">
           <p className="text-sm text-muted">
-            {loading ? "Loading…" : `${total} application${total === 1 ? "" : "s"} match`}
+            {loading ? "Loading…" : `${total} consultant${total === 1 ? "" : "s"} match`}
           </p>
           <div className="flex gap-3">
             <a
@@ -392,87 +593,105 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           )}
 
           {!error && loading && (
-            <p className="text-sm text-muted p-8 text-center">Loading applications…</p>
+            <p className="text-sm text-muted p-8 text-center">Loading consultants…</p>
           )}
 
-          {!error && !loading && applications.length === 0 && (
+          {!error && !loading && consultants.length === 0 && (
             <p className="text-sm text-muted p-8 text-center">
               No applications match these filters — try adjusting them.
             </p>
           )}
 
-          {!error && !loading && applications.length > 0 && (
+          {!error && !loading && consultants.length > 0 && (
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="bg-gray-light text-left text-xs uppercase tracking-wide text-muted">
+                    <th className="px-4 py-3 font-medium">Code</th>
                     <th className="px-4 py-3 font-medium">Name</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
                     <th className="px-4 py-3 font-medium">Level</th>
-                    <th className="px-4 py-3 font-medium">Functions</th>
-                    <th className="px-4 py-3 font-medium">Skills</th>
-                    <th className="px-4 py-3 font-medium">Industries</th>
                     <th className="px-4 py-3 font-medium">Location</th>
                     <th className="px-4 py-3 font-medium">Remote</th>
-                    <th className="px-4 py-3 font-medium">CV</th>
+                    <th className="px-4 py-3 font-medium">Pillars</th>
+                    <th className="px-4 py-3 font-medium">Industries</th>
+                    <th className="px-4 py-3 font-medium">Case studies</th>
                     <th className="px-4 py-3 font-medium">Submitted</th>
+                    <th className="px-4 py-3 font-medium">Files</th>
                     <th className="px-4 py-3 font-medium">
                       <span className="sr-only">Details</span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {applications.map((app) => {
-                    const expanded = expandedId === app.id;
+                  {consultants.map((c) => {
+                    const expanded = expandedId === c.id;
+                    const pillarNames = Array.from(new Set(c.capabilities.map((cap) => cap.pillarName)));
+                    const industryNames = c.industries.map((i) => i.name);
                     return (
-                      <Fragment key={app.id}>
+                      <Fragment key={c.id}>
                         <tr className="border-t border-hairline align-top">
-                          <td className="px-4 py-3 font-medium text-ink whitespace-nowrap">
-                            {app.fullName}
+                          <td className="px-4 py-3 font-mono text-xs text-ink whitespace-nowrap">
+                            {c.consultantCode}
                           </td>
+                          <td className="px-4 py-3 font-medium text-ink whitespace-nowrap">{c.fullName}</td>
                           <td className="px-4 py-3 text-ink">
                             <div className="flex flex-col">
-                              <span className="whitespace-nowrap">{app.email}</span>
-                              <span className="text-muted text-xs">{app.phone}</span>
+                              <span className="whitespace-nowrap">{c.email}</span>
+                              <span className="text-muted text-xs">{dash(c.mobile)}</span>
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-ink">
-                            {LEVEL_LABELS[app.level]}
+                            {CONSULTANT_STATUS_LABELS[c.status]}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-ink">
+                            {c.level ? LEVEL_LABELS[c.level] : "—"}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-ink">
+                            {[c.city, c.state, c.country].filter(Boolean).join(", ") || "—"}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-ink">
+                            {c.openToRemote === null ? "—" : c.openToRemote ? "Yes" : "No"}
                           </td>
                           <td className="px-4 py-3 min-w-[10rem]">
-                            <TruncatedList values={app.functions} labels={DELIVERY_FUNCTION_LABELS} />
-                          </td>
-                          <td className="px-4 py-3 min-w-[10rem]">
-                            <TruncatedList values={app.skills} labels={SKILL_LABELS} />
+                            <TruncatedList values={pillarNames} />
                           </td>
                           <td className="px-4 py-3 min-w-[8rem]">
-                            <TruncatedList values={app.industries} labels={INDUSTRY_LABELS} />
+                            <TruncatedList values={industryNames} />
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-ink">
-                            {app.city}, {app.state}, {app.country}
+                          <td className="px-4 py-3 whitespace-nowrap text-ink text-center">
+                            {c.caseStudies.length}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-ink">
-                            {app.remote ? "Yes" : "No"}
-                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-muted">{formatDate(c.createdAt)}</td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            {app.hasCv ? (
-                              <a
-                                href={`/api/admin/applications/${app.id}/cv`}
-                                className="text-navy font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy rounded"
-                              >
-                                Download
-                              </a>
-                            ) : (
-                              <span className="text-muted">No CV</span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-muted">
-                            {formatDate(app.createdAt)}
+                            <div className="flex flex-col gap-1">
+                              {c.hasCv ? (
+                                <a
+                                  href={`/api/admin/consultants/${c.id}/cv`}
+                                  className="text-navy font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy rounded"
+                                >
+                                  CV
+                                </a>
+                              ) : (
+                                <span className="text-muted text-xs">No CV</span>
+                              )}
+                              {c.hasDeck ? (
+                                <a
+                                  href={`/api/admin/consultants/${c.id}/deck`}
+                                  className="text-navy font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy rounded"
+                                >
+                                  Deck
+                                </a>
+                              ) : (
+                                <span className="text-muted text-xs">No deck</span>
+                              )}
+                            </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             <button
                               type="button"
-                              onClick={() => setExpandedId(expanded ? null : app.id)}
+                              onClick={() => setExpandedId(expanded ? null : c.id)}
                               className="text-navy text-sm font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy rounded"
                               aria-expanded={expanded}
                             >
@@ -482,25 +701,220 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
                         </tr>
                         {expanded && (
                           <tr className="border-t border-hairline bg-gray-light/40">
-                            <td colSpan={11} className="px-4 py-5">
-                              <div className="grid sm:grid-cols-2 gap-5">
-                                {QUALIFYING_QUESTIONS.map((q) => (
-                                  <div key={q.field}>
-                                    <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                                      {q.label}
-                                    </p>
-                                    <p className="text-sm text-ink whitespace-pre-wrap leading-relaxed">
-                                      {(app as unknown as Record<string, string>)[q.field] || "—"}
-                                    </p>
-                                  </div>
-                                ))}
+                            <td colSpan={13} className="px-4 py-5">
+                              <div className="flex flex-col gap-6">
+                                <div className="grid sm:grid-cols-3 md:grid-cols-4 gap-5">
+                                  <DetailField label="Total years experience" value={dash(c.totalYearsExp)} />
+                                  <DetailField label="Operating years" value={dash(c.operatingYearsExp)} />
+                                  <DetailField label="Advisory years" value={dash(c.advisoryYearsExp)} />
+                                  <DetailField label="Largest team managed" value={dash(c.maxTeamManaged)} />
+                                  <DetailField
+                                    label="Largest P&L / budget"
+                                    value={c.maxPnlBand ? PNL_BAND_LABELS[c.maxPnlBand] : "—"}
+                                  />
+                                  <DetailField
+                                    label="Travel willingness"
+                                    value={
+                                      c.travelWillingness
+                                        ? TRAVEL_WILLINGNESS_LABELS[
+                                            c.travelWillingness as keyof typeof TRAVEL_WILLINGNESS_LABELS
+                                          ]
+                                        : "—"
+                                    }
+                                  />
+                                  <DetailField
+                                    label="Client revenue bands"
+                                    value={
+                                      c.clientRevenueBands.length > 0
+                                        ? c.clientRevenueBands.map((b) => CLIENT_REVENUE_BAND_LABELS[b]).join(", ")
+                                        : "—"
+                                    }
+                                  />
+                                  <DetailField
+                                    label="LinkedIn"
+                                    value={
+                                      c.linkedinUrl ? (
+                                        <a
+                                          href={c.linkedinUrl}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="text-navy hover:underline"
+                                        >
+                                          Profile
+                                        </a>
+                                      ) : (
+                                        "—"
+                                      )
+                                    }
+                                  />
+                                  <DetailField
+                                    label="Invited by"
+                                    value={
+                                      c.invitedBy
+                                        ? `${c.invitedBy.fullName} (${c.invitedBy.consultantCode})`
+                                        : "Direct / GOP-sourced"
+                                    }
+                                  />
+                                  <DetailField label="Consent given" value={c.consentFlag ? "Yes" : "No"} />
+                                </div>
+
                                 <div>
-                                  <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">
-                                    Anything else
+                                  <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1.5">
+                                    Delivery capabilities
                                   </p>
-                                  <p className="text-sm text-ink whitespace-pre-wrap leading-relaxed">
-                                    {app.additionalNotes || "—"}
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {c.capabilities.length === 0 && <span className="text-muted text-sm">—</span>}
+                                    {c.capabilities.map((cap) => (
+                                      <span
+                                        key={cap.tagId}
+                                        className="inline-block rounded bg-white border border-hairline px-2 py-1 text-xs text-ink"
+                                        title={cap.pillarName}
+                                      >
+                                        {cap.tagName}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1.5">
+                                    Industries
                                   </p>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {c.industries.length === 0 && <span className="text-muted text-sm">—</span>}
+                                    {c.industries.map((i) => (
+                                      <span
+                                        key={i.industryId}
+                                        className="inline-block rounded bg-white border border-hairline px-2 py-1 text-xs text-ink"
+                                      >
+                                        {i.name}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <div className="grid sm:grid-cols-2 gap-5">
+                                  <DetailField
+                                    label="Why do you want to be part of GOP?"
+                                    value={c.reasonForJoining || "—"}
+                                  />
+                                  <DetailField
+                                    label="How will you deliver engagements?"
+                                    value={c.deliveryStyle || "—"}
+                                  />
+                                </div>
+
+                                <div>
+                                  <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
+                                    Engagement profile
+                                  </p>
+                                  {c.engagementProfile ? (
+                                    <div className="grid sm:grid-cols-3 md:grid-cols-5 gap-4 bg-white border border-hairline rounded-lg p-4">
+                                      <DetailField
+                                        label="Type"
+                                        value={
+                                          c.engagementProfile.engagementType
+                                            ? ENGAGEMENT_TYPE_LABELS[
+                                                c.engagementProfile.engagementType as keyof typeof ENGAGEMENT_TYPE_LABELS
+                                              ]
+                                            : "—"
+                                        }
+                                      />
+                                      <DetailField
+                                        label="Availability"
+                                        value={
+                                          c.engagementProfile.availabilityDaysWeek !== null
+                                            ? `${c.engagementProfile.availabilityDaysWeek} days/week`
+                                            : "—"
+                                        }
+                                      />
+                                      <DetailField
+                                        label="Notice period"
+                                        value={
+                                          c.engagementProfile.noticePeriodDays !== null
+                                            ? `${c.engagementProfile.noticePeriodDays} days`
+                                            : "—"
+                                        }
+                                      />
+                                      <DetailField label="Rate band" value={dash(c.engagementProfile.rateBand)} />
+                                      <DetailField
+                                        label="Currently engaged"
+                                        value={
+                                          c.engagementProfile.currentlyEngaged === null
+                                            ? "—"
+                                            : c.engagementProfile.currentlyEngaged
+                                              ? "Yes"
+                                              : "No"
+                                        }
+                                      />
+                                      {c.engagementProfile.currentlyEngaged && (
+                                        <div className="sm:col-span-3 md:col-span-5">
+                                          <DetailField
+                                            label="Exclusivity / non-compete notes"
+                                            value={dash(c.engagementProfile.exclusivityNotes)}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm text-muted">No engagement profile submitted.</p>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
+                                    Case studies ({c.caseStudies.length})
+                                  </p>
+                                  <div className="flex flex-col gap-3">
+                                    {c.caseStudies.length === 0 && (
+                                      <p className="text-sm text-muted">No case studies submitted.</p>
+                                    )}
+                                    {c.caseStudies.map((cs, i) => (
+                                      <div key={cs.id} className="bg-white border border-hairline rounded-lg p-4 flex flex-col gap-3">
+                                        <div className="flex items-center justify-between gap-3 flex-wrap">
+                                          <h4 className="font-display text-base text-ink">
+                                            {i + 1}. {cs.title}
+                                          </h4>
+                                          <div className="flex flex-wrap gap-1.5">
+                                            {cs.pillars.map((p) => (
+                                              <span
+                                                key={p.pillarId}
+                                                className="inline-block rounded bg-gray-light px-1.5 py-0.5 text-xs text-ink"
+                                              >
+                                                {p.pillarName}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                        <div className="grid sm:grid-cols-4 gap-4">
+                                          <DetailField label="Client industry" value={cs.clientIndustryName} />
+                                          <DetailField
+                                            label="Client size band"
+                                            value={CLIENT_REVENUE_BAND_LABELS[cs.clientSizeBand]}
+                                          />
+                                          <DetailField
+                                            label="Role"
+                                            value={
+                                              CASE_STUDY_ROLE_LABELS[cs.role as keyof typeof CASE_STUDY_ROLE_LABELS] ??
+                                              cs.role
+                                            }
+                                          />
+                                          <DetailField label="Duration" value={`${cs.durationMonths} months`} />
+                                        </div>
+                                        <DetailField label="Situation" value={cs.situationText} />
+                                        <DetailField label="Intervention" value={cs.interventionText} />
+                                        <DetailField label="Outcome" value={cs.outcomeText} />
+                                        <DetailField
+                                          label="Referenceable"
+                                          value={
+                                            REFERENCEABLE_LABELS[
+                                              cs.referenceable as keyof typeof REFERENCEABLE_LABELS
+                                            ] ?? cs.referenceable
+                                          }
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             </td>
@@ -515,7 +929,7 @@ export function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           )}
 
           {/* Pagination */}
-          {!error && !loading && applications.length > 0 && (
+          {!error && !loading && consultants.length > 0 && (
             <div className="flex items-center justify-between gap-4 px-4 py-4 border-t border-hairline flex-wrap">
               <p className="text-sm text-muted">
                 Page {page} of {totalPages}

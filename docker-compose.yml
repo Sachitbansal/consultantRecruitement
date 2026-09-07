@@ -45,6 +45,8 @@ services:
       # --email/--password as CLI args, so the admin password never sits in a
       # long-lived container environment. See scripts/seed-admin.mjs.
       UPLOADS_DIR: /app/uploads
+      # Diagnostics only, defaults to off — see .env.example.
+      PRISMA_LOG_QUERIES: ${PRISMA_LOG_QUERIES:-false}
       # Landing-page contact form (ported from the old cPanel contact.php).
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}

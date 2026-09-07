@@ -1,10 +1,19 @@
-// Prisma schema for the GOP Consultant Recruitment Portal.
+// Prisma schema for the GOP Consultant Network — relational redesign.
 //
-// NOTE on indexes: Postgres GIN indexes on the array columns (functions,
-// skills, industries) cannot be expressed with Prisma's `@@index` syntax.
-// They are appended as raw SQL at the end of the generated migration file:
-// prisma/migrations/<timestamp>_init/migration.sql. See that file for the
-// exact CREATE INDEX ... USING GIN statements.
+// This replaces the old 2-table (Application + AdminUser) schema with the
+// 10/11-table relational design from changes.pdf §2-§4. AdminUser is
+// untouched. See the migration report for full reasoning; key points
+// repeated here as inline comments so they survive independent of any
+// report file.
+//
+// NOTE on indexes: Postgres GIN indexes on array columns (consultants.
+// client_revenue_bands, client_engagements.pillar_ids) cannot be expressed
+// with Prisma's `@@index` syntax. They are appended as raw SQL at the end
+// of the generated migration file. `prisma migrate dev` will try to DROP
+// them on every subsequent migration because it reads them as drift —
+// strip those DROP statements by hand every time, exactly as documented in
+// prisma/migrations/20260816185004_add_country/migration.sql for the old
+// schema.
 
 generator client {
   provider = "prisma-client-js"
@@ -19,128 +28,447 @@ datasource db {
 // Enums
 // ---------------------------------------------------------------------------
 
+/// Three bands only — no Partner. Confirmed deliberately.
 enum Level {
   CONSULTANT // 5-10 yrs
   SENIOR_CONSULTANT // 10-18 yrs
   PRINCIPAL // 18-25 yrs
-  PARTNER // 25+ yrs
 }
 
-enum DeliveryFunction {
-  SALES_AND_BD
-  MARKETING_AND_BRANDING
-  OPERATIONS_AND_SUPPLY_CHAIN
-  HR_OPS_AND_ORGANISATION_DESIGN
-  TALENT_ACQUISITION_AND_HEAD_HUNTING
-  LEARNING_AND_DEVELOPMENT
-  BUSINESS_TRANSFORMATION_WITH_AI
-  CORPORATE_FINANCE_AND_WORKING_CAPITAL
-  ACCOUNTING_AND_TAXATION
-  ACCOUNTS_RECEIVABLES_AND_PAYABLES
+enum TravelWillingness {
+  NONE
+  DOMESTIC
+  DOMESTIC_INTERNATIONAL
 }
 
-// Flat enum. Cluster groupings (Strategy & Execution, Data & Analysis,
-// Tools & Communication, Growth & Business Development) are NOT modeled in
-// the DB — they are UI-only metadata and live in src/lib/constants.ts as
-// SKILL_CLUSTERS, keyed off this same enum so the mapping stays exhaustive.
-enum Skill {
-  STRATEGY
-  EXECUTION
-  PROCESS
-  SOP
-  TRACKERS
-  MIS
-  DATA_ANALYSIS
-  EXCEL
-  ADVANCED_EXCEL
-  BI
-  AGENTIC_AI
-  POWERPOINT
-  COMMUNICATION
-  DIGITAL_MARKETING_ASSETS_MANAGEMENT
-  KEY_ACCOUNTS_MANAGEMENT
-  LEAD_GENERATION
-  NEW_BUSINESS_DEVELOPMENT
+/// Largest P&L / budget owned.
+enum PnlBand {
+  UNDER_5CR
+  CR_5_TO_25
+  CR_25_TO_100
+  OVER_100CR
+  NOT_APPLICABLE
 }
 
-enum Industry {
-  MANUFACTURING
-  PACKAGING
-  SERVICES
-  CONSULTING
-  PRIVATE_EQUITY
-  BANKING
-  OTHERS
+/// Used both for consultants.client_revenue_bands (multi-select, array) and
+/// case_studies.client_size_band (single value) — same taxonomy, mirrors
+/// GOP's own client revenue bands per §2 Section D.
+enum ClientRevenueBand {
+  UNDER_150CR
+  CR_150_TO_300
+  CR_300_TO_500
+  OVER_500CR
+}
+
+enum ConsultantStatus {
+  INVITED
+  APPLIED
+  APPROVED
+  ACTIVE
+  INACTIVE
+  DECLINED
+}
+
+enum CaseStudyRole {
+  LEAD
+  CORE_TEAM
+  CONTRIBUTOR
+}
+
+enum Referenceable {
+  NAMED
+  ANONYMIZED_ONLY
+}
+
+enum EngagementType {
+  FRACTIONAL
+  FULL_PROJECT
+  ADVISORY_ONLY
+  INTERIM
+}
+
+/// client_engagements.status. Deliberately a separate enum from
+/// ConsultantStatus even though both have an ACTIVE member — they describe
+/// different things and must not be conflated.
+enum ClientEngagementStatus {
+  PROSPECT
+  ACTIVE
+  COMPLETED
 }
 
 // ---------------------------------------------------------------------------
-// Models
+// consultants — master record
 // ---------------------------------------------------------------------------
-
-model Application {
-  id String @id @default(cuid())
-
-  fullName String
-  email    String
-  phone    String
-
-  level      Level
-  functions  DeliveryFunction[]
-  skills     Skill[]
-  industries Industry[]
-
-  city    String
-  state   String // free text, intentionally no enum
-  country String  @default("India") // free text; default backfills pre-existing rows
-  remote  Boolean @default(false)
-
-  additionalNotes String? @db.Text
-
-  // Five qualifying questions - all required free text.
-  qWhatIsGop          String @db.Text
-  qWhyJoinGop         String @db.Text
-  qKeySkills          String @db.Text
-  qRelevantExperience String @db.Text
-  qHowDeliver         String @db.Text
-
-  // CV storage. Only a path/key is stored here; the file itself lives on
-  // the server's disk volume at cvStoredPath (e.g.
-  // uploads/cvs/{applicationId}/{cvFileName}).
+//
+// PK choice: `id` is an opaque cuid (internal surrogate key), NOT the
+// human-readable GOP-C-000001 code. The code lives in the separate unique
+// `consultantCode` column, generated from a dedicated Postgres sequence
+// (consultant_code_seq — see migration.sql; Prisma's `dbgenerated()` below
+// only captures the DEFAULT expression, the sequence itself is created by
+// hand in the migration).
+//
+// Why not make consultantCode the PK, as the PDF's table listing literally
+// shows?
+//   1. Every other table's FK columns are still named `consultant_id` per
+//      the PDF (see case_studies, consultant_capabilities, etc.) — but they
+//      store this cuid, not the code. That decouples 5+ FK columns across
+//      the schema from the code's exact format. If the code format ever
+//      needs a one-off correction (duplicate merge, typo, a future
+//      "human-friendly variant" per §3), it's a single-column UPDATE, not a
+//      cascading rewrite of every FK in the DB.
+//   2. A sequential, guessable integer (GOP-C-000042) is exactly the kind
+//      of identifier you do NOT want as the join key baked into URLs and
+//      route params — an authenticated admin dashboard route built as
+//      /admin/consultants/GOP-C-000042 makes the whole roster trivially
+//      enumerable by walking the sequence, even if a specific request is
+//      individually authorized. Keeping the opaque cuid as the "real" PK
+//      means the api/frontend agents *can* route on `id` instead, and only
+//      surface `consultantCode` as a display label inside the authenticated
+//      admin UI. Flagging this choice to the next agent explicitly.
+//   3. Matches the existing repo convention — Application/AdminUser both
+//      already use cuid PKs.
+//
+// Deletion: consultants are expected to be soft-deleted via `status`
+// (DECLINED/INACTIVE), never hard-deleted in normal operation. Hard delete
+// is only a rare/manual path (e.g. a duplicate row cleanup or a data-erasure
+// request). See `invitedBy` below for what happens to the referral graph in
+// that case.
+//
+// Nullability: most business-data columns are nullable. This mirrors the
+// existing CV-column precedent in the old schema (nullable columns support
+// a multi-phase write) but the actual driver here is the `status` lifecycle:
+// a row can be created at INVITED (an admin invite stub — name + email
+// known, nothing else) long before the invitee ever fills in level, city,
+// experience, pillars, etc. at APPLIED. Only id/consultantCode/fullName/
+// email/status/consentFlag/clientRevenueBands/timestamps are guaranteed
+// non-null; everything the public form collects is nullable until answered.
+model Consultant {
+  id             String @id @default(cuid())
+  // Generated from a dedicated Postgres sequence (consultant_code_seq) so
+  // concurrent submissions never race the way a `SELECT max()+1` would.
+  // The sequence itself is created by hand in the migration SQL — Prisma's
+  // dbgenerated() only captures this DEFAULT expression, not the sequence.
   //
-  // These four columns are nullable even though a CV is required at
-  // submission time. Reasoning: the application row is created first (to
-  // mint the cuid `id` that the upload path is keyed on), then the file is
-  // written to disk, then the row is updated with the CV metadata. Making
-  // these columns required would force either a two-phase-commit-style
-  // write that Postgres can't help with, or generating the id outside the
-  // DB. Nullable columns let the API layer do: create row -> stream file to
-  // disk using the new id -> update row with cv* fields, and let a null
-  // cvStoredPath after submission clearly signal "upload failed / incomplete"
-  // for admin cleanup, rather than silently violating a NOT NULL constraint
-  // or wrapping unrelated concerns in a single transaction.
-  cvFileName   String?
-  cvStoredPath String?
-  cvMimeType   String?
-  cvSizeBytes  Int?
+  // KNOWN DRIFT (harmless, cosmetic): Postgres re-serializes this DEFAULT
+  // expression with explicit ::text casts and different parenthesization
+  // than the literal string below, so `prisma migrate dev` / `migrate diff`
+  // will ALWAYS show a spurious `ALTER TABLE ... ALTER COLUMN
+  // "consultant_code" SET DEFAULT (...)` on every future migration, even
+  // with zero real changes. Re-applying that statement is a functional
+  // no-op (same sequence, same format). Do not "fix" it by editing the
+  // dbgenerated() string to chase the DB's exact serialization — it will
+  // never converge byte-for-byte. Just let that one line through (or strip
+  // it, since it's a no-op) the same way GIN-index DROP statements are
+  // stripped from generated migrations.
+  consultantCode String @unique @default(dbgenerated("('GOP-C-' || lpad((nextval('consultant_code_seq'::regclass))::text, 6, '0'))")) @map("consultant_code") @db.VarChar(20)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // GIN indexes on functions, skills, industries are added via raw SQL in
-  // the migration file — Prisma has no native syntax for them.
+  // --- Section A: Identity & Contact ---------------------------------
+  fullName          String             @map("full_name")
+  email             String             @unique
+  mobile            String?
+  linkedinUrl       String?            @map("linkedin_url")
+  city              String?
+  state             String?
+  country           String?
+  openToRemote      Boolean?           @map("open_to_remote")
+  travelWillingness TravelWillingness? @map("travel_willingness")
 
-  // Scalar filter/search indexes.
+  // --- Section B: Level & Tenure --------------------------------------
+  level             Level?
+  totalYearsExp     Int?     @map("total_years_exp")
+  operatingYearsExp Int?     @map("operating_years_exp")
+  advisoryYearsExp  Int?     @map("advisory_years_exp")
+  maxTeamManaged    Int?     @map("max_team_managed")
+  maxPnlBand        PnlBand? @map("max_pnl_band")
+
+  // --- Section D: Industry Depth (revenue band is multi-select; implicit
+  // in the PDF's §4 table listing — added here per the task's explicit
+  // instruction. Stored as a native Postgres array + GIN index, consistent
+  // with how the old schema stored multi-selects.) ----------------------
+  clientRevenueBands ClientRevenueBand[] @map("client_revenue_bands")
+
+  // --- Invitation / referral graph ------------------------------------
+  invitedById String?      @map("invited_by_id")
+  invitedBy   Consultant?  @relation("ConsultantReferrals", fields: [invitedById], references: [id], onDelete: SetNull)
+  referrals   Consultant[] @relation("ConsultantReferrals")
+
+  // --- Lifecycle status -------------------------------------------------
+  status       ConsultantStatus @default(APPLIED)
+  dateInvited  DateTime?        @map("date_invited") @db.Date
+  dateApplied  DateTime?        @map("date_applied") @db.Date
+  dateApproved DateTime?        @map("date_approved") @db.Date
+
+  // --- Section H: Documents & Consent ------------------------------------
+  // CV storage — path/key only, mirrors the old Application model exactly.
+  cvFileName   String? @map("cv_file_name")
+  cvStoredPath String? @map("cv_stored_path")
+  cvMimeType   String? @map("cv_mime_type")
+  cvSizeBytes  Int?    @map("cv_size_bytes")
+
+  // Supporting case-study deck / deliverable sample — optional, not in the
+  // §4 table listing but explicitly called for by §2 Section H. Mirrors the
+  // CV columns exactly: nullable, file lives on disk keyed by consultant id,
+  // only path/key stored here.
+  deckFileName   String? @map("deck_file_name")
+  deckStoredPath String? @map("deck_stored_path")
+  deckMimeType   String? @map("deck_mime_type")
+  deckSizeBytes  Int?    @map("deck_size_bytes")
+
+  consentFlag Boolean @default(false) @map("consent_flag")
+
+  // --- Section G: qualitative questions -----------------------------
+  // Not in the §4 table listing either, but §2 Section G explicitly defines
+  // two required qualifying questions (200 chars each) that need somewhere
+  // to live. Added for the same reason as the deck columns: the PDF's §4
+  // table is a summary, not an exhaustive DDL. Flagged in the report.
+  reasonForJoining String? @map("reason_for_joining") @db.Text
+  deliveryStyle    String? @map("delivery_style") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  capabilities       ConsultantCapability[]
+  industries         ConsultantIndustry[]
+  caseStudies        CaseStudy[]
+  engagementProfile  EngagementProfile?
+  engagementStaffing EngagementStaffing[]
+
+  // Scalar filter/sort indexes for the admin dashboard.
+  @@index([status])
   @@index([level])
   @@index([city])
   @@index([state])
   @@index([country])
-  @@index([remote])
+  @@index([openToRemote])
+  @@index([travelWillingness])
   @@index([createdAt])
   @@index([fullName])
-  @@index([email])
+  @@index([invitedById])
+  // GIN index on client_revenue_bands is added via raw SQL in the migration.
+  @@map("consultants")
 }
 
-// Admins are created by a seed script only — there is no signup route and no
-// permission tiers. If roles are ever needed, add them as a new migration.
+// ---------------------------------------------------------------------------
+// pillars — lookup: the 7 S.C.A.L.E. categories
+// ---------------------------------------------------------------------------
+model Pillar {
+  id   Int    @id @default(autoincrement()) @map("pillar_id")
+  code String @unique @db.VarChar(60)
+  name String @db.VarChar(120)
+
+  subTags          SubTag[]
+  caseStudyPillars CaseStudyPillar[]
+
+  @@map("pillars")
+}
+
+// ---------------------------------------------------------------------------
+// sub_tags — lookup: sub-capabilities within a pillar
+// ---------------------------------------------------------------------------
+model SubTag {
+  id       Int    @id @default(autoincrement()) @map("tag_id")
+  pillarId Int    @map("pillar_id")
+  code     String @unique @db.VarChar(60)
+  name     String @db.VarChar(120)
+
+  // Lookup-to-lookup FK: RESTRICT. Retiring a pillar while it still has
+  // sub_tags must be an explicit action (reassign/delete the sub_tags
+  // first), never a silent cascade that empties out taxonomy underneath
+  // live consultant tagging.
+  pillar       Pillar                 @relation(fields: [pillarId], references: [id], onDelete: Restrict)
+  capabilities ConsultantCapability[]
+
+  @@index([pillarId])
+  @@map("sub_tags")
+}
+
+// ---------------------------------------------------------------------------
+// consultant_capabilities — junction, consultants <-> sub_tags (M:N)
+// ---------------------------------------------------------------------------
+model ConsultantCapability {
+  consultantId String @map("consultant_id")
+  tagId        Int    @map("tag_id")
+
+  // Ownership FK (consultant owns the tagging row): CASCADE.
+  consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+  // Lookup FK: RESTRICT — see rule documented on SubTag.pillar above.
+  tag        SubTag     @relation(fields: [tagId], references: [id], onDelete: Restrict)
+
+  @@id([consultantId, tagId])
+  @@index([tagId])
+  @@map("consultant_capabilities")
+}
+
+// ---------------------------------------------------------------------------
+// industries — lookup, self-referential sector > sub-vertical
+// ---------------------------------------------------------------------------
+model Industry {
+  id               Int    @id @default(autoincrement()) @map("industry_id")
+  code             String @unique @db.VarChar(60)
+  name             String @db.VarChar(120)
+  parentIndustryId Int?   @map("parent_industry_id")
+
+  // Lookup-to-lookup self-reference: RESTRICT. Deleting "Manufacturing"
+  // while its 9 sub-verticals still point at it must fail loudly, not
+  // silently orphan/cascade-delete real taxonomy.
+  parent   Industry?  @relation("IndustryHierarchy", fields: [parentIndustryId], references: [id], onDelete: Restrict)
+  children Industry[] @relation("IndustryHierarchy")
+
+  consultantIndustries ConsultantIndustry[]
+  caseStudies          CaseStudy[]
+  clientEngagements    ClientEngagement[]
+
+  @@index([parentIndustryId])
+  @@map("industries")
+}
+
+// ---------------------------------------------------------------------------
+// consultant_industries — junction, consultants <-> industries (M:N)
+// ---------------------------------------------------------------------------
+model ConsultantIndustry {
+  consultantId String @map("consultant_id")
+  industryId   Int    @map("industry_id")
+
+  consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+  industry   Industry   @relation(fields: [industryId], references: [id], onDelete: Restrict)
+
+  @@id([consultantId, industryId])
+  @@index([industryId])
+  @@map("consultant_industries")
+}
+
+// ---------------------------------------------------------------------------
+// case_studies
+// ---------------------------------------------------------------------------
+model CaseStudy {
+  id               String            @id @default(cuid()) @map("case_study_id")
+  consultantId     String            @map("consultant_id")
+  title            String            @db.VarChar(80)
+  clientIndustryId Int               @map("client_industry_id")
+  clientSizeBand   ClientRevenueBand @map("client_size_band")
+  role             CaseStudyRole
+  situationText    String            @map("situation_text") @db.VarChar(200)
+  interventionText String            @map("intervention_text") @db.VarChar(250)
+  outcomeText      String            @map("outcome_text") @db.VarChar(150)
+  durationMonths   Int               @map("duration_months")
+  referenceable    Referenceable
+  createdAt        DateTime          @default(now()) @map("created_at")
+
+  // Ownership FK: CASCADE — a case study has no meaning without its
+  // consultant.
+  consultant     Consultant        @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+  // Lookup FK: RESTRICT — same rule as everywhere else; don't let a
+  // taxonomy edit silently mutate historical case-study data.
+  clientIndustry Industry          @relation(fields: [clientIndustryId], references: [id], onDelete: Restrict)
+  pillars        CaseStudyPillar[]
+
+  @@index([consultantId])
+  @@index([clientIndustryId])
+  @@map("case_studies")
+}
+
+// ---------------------------------------------------------------------------
+// case_study_pillars — junction, a case study can span multiple pillars
+// ---------------------------------------------------------------------------
+model CaseStudyPillar {
+  caseStudyId String @map("case_study_id")
+  pillarId    Int    @map("pillar_id")
+
+  caseStudy CaseStudy @relation(fields: [caseStudyId], references: [id], onDelete: Cascade)
+  pillar    Pillar    @relation(fields: [pillarId], references: [id], onDelete: Restrict)
+
+  @@id([caseStudyId, pillarId])
+  @@index([pillarId])
+  @@map("case_study_pillars")
+}
+
+// ---------------------------------------------------------------------------
+// engagement_profile — 1:1 with consultants
+// ---------------------------------------------------------------------------
+// Kept as a separate table (per the PDF's own reasoning) because
+// availability/rate/notice-period data goes stale fast and shouldn't
+// require touching the core identity record every time it's updated.
+model EngagementProfile {
+  consultantId String @id @map("consultant_id")
+
+  engagementType       EngagementType? @map("engagement_type")
+  availabilityDaysWeek Int?            @map("availability_days_week")
+  noticePeriodDays     Int?            @map("notice_period_days")
+  // PDF explicitly leaves this "text or enum" open, and gives no concrete
+  // rate cutoffs (unlike max_pnl_band / client_revenue_bands, which have
+  // stated bands). Rather than invent rupee thresholds GOP never specified,
+  // this stays free text. Revisit as an enum once real commercial bands are
+  // supplied — flagged in the report.
+  rateBand             String?         @map("rate_band")
+  currentlyEngaged     Boolean?        @map("currently_engaged")
+  exclusivityNotes     String?         @map("exclusivity_notes") @db.VarChar(150)
+  lastUpdated          DateTime        @updatedAt @map("last_updated")
+
+  consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@map("engagement_profile")
+}
+
+// ---------------------------------------------------------------------------
+// client_engagements — payoff table. Tables only, no UI/writes yet.
+// ---------------------------------------------------------------------------
+// pillar_ids: the PDF explicitly offers "pillar_ids (or junction table
+// client_engagement_pillars)" as either/or. The task's enumerated table
+// list names exactly 10 new tables + AdminUser (11 total) and does NOT
+// include a client_engagement_pillars table, so the array form is used
+// here to keep the table count matching that list exactly (the task's own
+// prose says "10-table design" while literally naming 11 tables — flagged
+// as an inconsistency in the report). Tradeoff: a Postgres array can't
+// carry an FK constraint, so referential integrity on pillar_ids is NOT
+// enforced by the DB — only application code checks it. Acceptable given
+// nothing writes to this table yet.
+model ClientEngagement {
+  id               String                 @id @default(cuid()) @map("engagement_id")
+  clientName       String                 @map("client_name")
+  clientIndustryId Int?                   @map("client_industry_id")
+  pillarIds        Int[]                  @map("pillar_ids")
+  startDate        DateTime?              @map("start_date") @db.Date
+  endDate          DateTime?              @map("end_date") @db.Date
+  status           ClientEngagementStatus @default(PROSPECT)
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+
+  clientIndustry Industry?            @relation(fields: [clientIndustryId], references: [id], onDelete: Restrict)
+  staffing       EngagementStaffing[]
+
+  @@index([status])
+  @@index([clientIndustryId])
+  @@index([createdAt])
+  // GIN index on pillar_ids is added via raw SQL in the migration.
+  @@map("client_engagements")
+}
+
+// ---------------------------------------------------------------------------
+// engagement_staffing — junction, who's staffed on what
+// ---------------------------------------------------------------------------
+// Composite PK (engagementId, consultantId): matches the style of every
+// other junction table in this schema. This implies one active role per
+// consultant per engagement at a time (an update-in-place snapshot, not a
+// staffing history log) — the PDF gives no temporal/versioning columns
+// here, so a history table would be over-building for a table nothing
+// writes to yet.
+model EngagementStaffing {
+  engagementId     String  @map("engagement_id")
+  consultantId     String  @map("consultant_id")
+  roleOnEngagement String? @map("role_on_engagement")
+
+  engagement ClientEngagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  consultant Consultant       @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@id([engagementId, consultantId])
+  @@index([consultantId])
+  @@map("engagement_staffing")
+}
+
+// ---------------------------------------------------------------------------
+// AdminUser — untouched. Created by a seed script only; no signup route,
+// no permission tiers.
+// ---------------------------------------------------------------------------
 model AdminUser {
   id           String    @id @default(cuid())
   email        String    @unique
