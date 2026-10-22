@@ -168,7 +168,15 @@ Legal or expert review:
   - /insights/how-to-prepare-for-sme-ipo/  merchant banker or legal review
   - /insights/governance-and-mis-for-mid-size-manufacturers/  company
     secretary or legal review
-  Both carry a "Not legal or financial advice" note.
+  - /insights/qoe-grade-reporting-basics/  chartered accountant review
+  - /insights/what-investors-diligence-in-a-mid-size-manufacturer/
+    transaction adviser or legal review
+  All four carry a "Not legal or financial advice" note.
+
+Bylines: the six articles added on 23 October 2026 (costing architecture,
+working capital, MIS design, QoE reporting, investor diligence, 90-day plan)
+are bylined "GOP Editorial". If a partner reviews one and wants their name on
+it, change the byline in its page.html.
 
 Results and claims, for sign-off by the practice lead. Every figure below
 comes from the reference build. Nothing was added.

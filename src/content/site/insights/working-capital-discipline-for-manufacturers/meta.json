@@ -1,0 +1,30 @@
+{
+  "title": "Working Capital Discipline for Manufacturers | GOP",
+  "description": "How mid-size manufacturers release cash tied up in inventory and receivables: the cash conversion cycle, norms by category and a weekly rhythm.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "category": "Finance, costing and reporting",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/working-capital-discipline-for-manufacturers/#article",
+      "headline": "Working capital discipline for mid-size manufacturers",
+      "description": "How mid-size manufacturers release cash tied up in inventory and receivables: the cash conversion cycle, norms by category and a weekly rhythm.",
+      "url": "https://gop.sbssdigital.com/insights/working-capital-discipline-for-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/working-capital-discipline-for-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/working-capital-cash-conversion-cycle.webp",
+      "articleSection": "Insights"
+    }
+  ]
+}

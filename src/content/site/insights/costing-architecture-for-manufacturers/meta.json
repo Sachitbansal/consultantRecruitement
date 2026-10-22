@@ -1,0 +1,30 @@
+{
+  "title": "Costing Architecture for Manufacturers: True Margin | GOP",
+  "description": "How a mid-size manufacturer builds a costing architecture that shows true margin by product and customer, from material yield to cost to serve.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "category": "Finance, costing and reporting",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/costing-architecture-for-manufacturers/#article",
+      "headline": "Costing architecture: how manufacturers find true product margin",
+      "description": "How a mid-size manufacturer builds a costing architecture that shows true margin by product and customer, from material yield to cost to serve.",
+      "url": "https://gop.sbssdigital.com/insights/costing-architecture-for-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/costing-architecture-for-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/costing-architecture-product-customer-contribution.webp",
+      "articleSection": "Insights"
+    }
+  ]
+}

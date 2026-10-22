@@ -1,0 +1,30 @@
+{
+  "title": "A 90-Day Transformation Plan for Manufacturers | GOP",
+  "description": "What a realistic first 90 days of transformation looks like in a promoter-led manufacturer: baselines, first wins and the routines that make change stick.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "category": "Working with consultants and being found",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/90-day-transformation-plan-for-manufacturers/#article",
+      "headline": "A 90-day transformation plan for a promoter-led manufacturer",
+      "description": "What a realistic first 90 days of transformation looks like in a promoter-led manufacturer: baselines, first wins and the routines that make change stick.",
+      "url": "https://gop.sbssdigital.com/insights/90-day-transformation-plan-for-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/90-day-transformation-plan-for-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/ninety-day-transformation-plan-manufacturer.webp",
+      "articleSection": "Insights"
+    }
+  ]
+}

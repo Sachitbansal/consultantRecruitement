@@ -1,0 +1,30 @@
+{
+  "title": "QoE-Grade Reporting Basics for Manufacturers | GOP",
+  "description": "What quality of earnings reviews test and how a promoter-led manufacturer can make its reporting QoE-grade before an investor or lender asks.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "category": "Finance, costing and reporting",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/qoe-grade-reporting-basics/#article",
+      "headline": "QoE-grade reporting: the basics for promoter-led manufacturers",
+      "description": "What quality of earnings reviews test and how a promoter-led manufacturer can make its reporting QoE-grade before an investor or lender asks.",
+      "url": "https://gop.sbssdigital.com/insights/qoe-grade-reporting-basics/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/qoe-grade-reporting-basics/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/quality-of-earnings-ebitda-reconciliation-illustrative.webp",
+      "articleSection": "Insights"
+    }
+  ]
+}

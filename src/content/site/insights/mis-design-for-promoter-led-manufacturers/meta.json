@@ -1,0 +1,30 @@
+{
+  "title": "MIS Design for Promoter-Led Manufacturers | GOP",
+  "description": "How to design a management information system a promoter-led manufacturer will actually use: a KPI tree, owners, timing and one pack for every meeting.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "category": "Finance, costing and reporting",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/mis-design-for-promoter-led-manufacturers/#article",
+      "headline": "How to design an MIS that a promoter-led manufacturer will use",
+      "description": "How to design a management information system a promoter-led manufacturer will actually use: a KPI tree, owners, timing and one pack for every meeting.",
+      "url": "https://gop.sbssdigital.com/insights/mis-design-for-promoter-led-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/mis-design-for-promoter-led-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/mis-design-kpi-tree-manufacturer.webp",
+      "articleSection": "Insights"
+    }
+  ]
+}
