@@ -141,6 +141,8 @@ const scanTargets = [
       !/^(apply|admin)(\.|[/\\])/.test(path.relative(APP_OUT, f)),
   ),
   ...walk(PUBLIC).filter((f) => /\.(txt|xml|html|json|md)$/.test(f)),
+  // Client JS shipped to marketing pages (e.g. the enquiry form's copy).
+  ...walk(path.join(ROOT, ".next/static/chunks/app/(site)")).filter((f) => f.endsWith(".js")),
   ...walk(path.join(ROOT, "src/content")),
   path.join(ROOT, "src/lib/gop-content.ts"),
 ];

@@ -31,6 +31,12 @@ const nextConfig = {
     },
   },
 
+  // With skipTrailingSlashRedirect on, /api/x/ would otherwise be served
+  // as-is. Keep the 308 to /api/x that the app always had.
+  async redirects() {
+    return [{ source: '/api/:path+/', destination: '/api/:path+', permanent: true }];
+  },
+
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
