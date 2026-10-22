@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useId, useState, type FormEvent } from "react";
 import { contact } from "@/lib/gop-content";
 
@@ -73,7 +74,7 @@ export default function ContactForm() {
   const [formError, setFormError] = useState("");
   const [blocked, setBlocked] = useState(false);
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const router = useRouter();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -121,8 +122,12 @@ export default function ContactForm() {
         }
         return;
       }
-      setSent(true);
+      // The thanks page is noindex and doubles as the conversion URL for
+      // analytics, so success always lands there rather than swapping in a
+      // message.
       form.reset();
+      router.push("/enquiry/thanks/");
+      return;
     } catch {
       setBlocked(true);
       setFormError(
@@ -131,31 +136,6 @@ export default function ContactForm() {
     } finally {
       setSending(false);
     }
-  }
-
-  if (sent) {
-    return (
-      <div className="contact-form">
-        <div className="form-success" role="status">
-          <div className="check" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M4 10.5l4 4 8-9"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          <h3>Thank you — your message is in.</h3>
-          <p>
-            We&rsquo;ll be in touch {contact.responseTime.toLowerCase()} to
-            schedule your diagnostic call.
-          </p>
-        </div>
-      </div>
-    );
   }
 
   const field = (name: string) => ({
@@ -178,7 +158,7 @@ export default function ContactForm() {
     ) : null;
 
   return (
-    <form className="contact-form" onSubmit={onSubmit} noValidate>
+    <form className="enq" onSubmit={onSubmit} noValidate>
       {formError && (
         <p className="form-alert" role="alert">
           {formError}
@@ -261,7 +241,7 @@ export default function ContactForm() {
         />
       </div>
 
-      <button className="btn btn-primary" type="submit" disabled={sending}>
+      <button type="submit" disabled={sending}>
         {sending ? "Sending…" : contact.submitLabel}
       </button>
 

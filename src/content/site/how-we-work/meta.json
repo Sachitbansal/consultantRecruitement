@@ -1,0 +1,33 @@
+{
+  "title": "How GOP Works: Diagnostic, Roadmap, Implementation",
+  "description": "GOP embeds senior operators in your team: a fixed-scope diagnostic, a sequenced roadmap with owners, then implementation against KPIs reviewed weekly.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "HowTo",
+      "@id": "https://gop.sbssdigital.com/how-we-work/#howto",
+      "name": "How a GOP engagement works",
+      "description": "Diagnostic, roadmap and implementation with embedded operators against agreed KPIs.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Diagnostic",
+          "text": "Fixed-scope review over one to two weeks producing a scorecard, quantified gap and priorities."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Roadmap",
+          "text": "Sequenced, costed plan with owners and dates against the target."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Implementation",
+          "text": "Operators embedded in the client team execute against agreed KPIs with a weekly review and handover of a working system."
+        }
+      ]
+    }
+  ]
+}

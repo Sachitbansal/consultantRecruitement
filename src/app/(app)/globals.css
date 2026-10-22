@@ -3,15 +3,16 @@
 @tailwind utilities;
 
 /* ---------------------------------------------------------------------------
-   Two style systems live here on purpose.
+   Loaded only by the internal app (/apply, /admin) via (app)/layout.tsx.
+   The public marketing site has its own stylesheet, (site)/site.css.
 
-   The public landing page (/) is the ported Growth Operating Partners site,
-   written in plain CSS — the design system below. /apply and /admin are built
-   with Tailwind utilities. They coexist because every rule below targets bare
-   elements or GOP-specific class names, and a Tailwind utility (specificity
-   0,1,0) always beats a bare element selector (0,0,1). Do not convert one to
-   the other; just keep new landing styles in the GOP block and new app styles
-   in Tailwind classes.
+   The plain-CSS block below is the design system of the former single-page
+   landing site. The base rules (reset, body, headings, focus, skip link) still
+   style /apply and /admin; the landing-section classes (.hero, .scale-*,
+   .contact-*, etc.) no longer have any users and can be pruned once someone
+   checks /apply and /admin visually afterwards. /apply and /admin are built
+   with Tailwind utilities, which (specificity 0,1,0) always beat the bare
+   element selectors (0,0,1) here.
    --------------------------------------------------------------------------- */
 
 /* =========================================================================

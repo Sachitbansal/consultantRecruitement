@@ -3,11 +3,12 @@ import { Fraunces, Inter } from "next/font/google";
 import { site } from "@/lib/gop-content";
 import "./globals.css";
 
-// Variable names are --font-display / --font-sans because the ported GOP
-// landing CSS references those directly; tailwind.config.ts maps its
-// font-display / font-sans utilities onto the same two variables, so the
-// landing page and the Tailwind-built /apply and /admin pages share one
-// font setup.
+// Root layout for the internal app: /apply (consultant intake) and /admin.
+// The public marketing site has its own root layout in (site)/ with system
+// fonts and its own stylesheet, so nothing here leaks into it or vice versa.
+//
+// Variable names are --font-display / --font-sans because globals.css and
+// tailwind.config.ts both reference those two variables.
 const display = Fraunces({
   subsets: ["latin"],
   axes: ["opsz"],
@@ -21,33 +22,11 @@ const sans = Inter({
   display: "swap",
 });
 
-const ogImage = {
-  url: `${site.url}og-image.png`,
-  width: 1200,
-  height: 630,
-  alt: `${site.name} — ${site.tagline}`,
-};
-
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.tagline}`,
+    default: site.name,
     template: `%s — ${site.name}`,
-  },
-  description: site.description,
-  openGraph: {
-    type: "website",
-    url: site.url,
-    siteName: site.name,
-    title: `${site.name} — ${site.tagline}`,
-    description: site.description,
-    images: [ogImage],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${site.name} — ${site.tagline}`,
-    description: site.description,
-    images: [ogImage.url],
   },
   icons: {
     icon: [
@@ -56,10 +35,13 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-  robots: { index: true, follow: true },
+  // Intake form and admin are not search content. robots.ts also disallows
+  // them and next.config.mjs sends X-Robots-Tag; this covers crawlers that
+  // ignore both.
+  robots: { index: false, follow: false },
 };
 
-export default function RootLayout({
+export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

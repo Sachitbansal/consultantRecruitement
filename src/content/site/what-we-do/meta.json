@@ -1,0 +1,66 @@
+{
+  "title": "What GOP Does: Five Levers for Manufacturers | GOP",
+  "description": "GOP's Five Levers: operational excellence, commercial excellence, new business, demand generation and investment readiness for manufacturers.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/what-we-do/#service",
+      "name": "Business transformation for promoter-led manufacturers",
+      "description": "Five levers delivered by operator-led teams: operational excellence, commercial excellence, new business development, demand generation, and governance and investment readiness.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "GOP Five Levers",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Operational Excellence & Cost Optimization",
+              "url": "https://gop.sbssdigital.com/what-we-do/operational-excellence/"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Commercial Excellence & Value Capturing",
+              "url": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "New Business Development",
+              "url": "https://gop.sbssdigital.com/what-we-do/new-business-development/"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Demand Generation & Brand Building",
+              "url": "https://gop.sbssdigital.com/what-we-do/demand-generation/"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Strengthening Governance & Investment Readiness",
+              "url": "https://gop.sbssdigital.com/what-we-do/governance-investment-readiness/"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

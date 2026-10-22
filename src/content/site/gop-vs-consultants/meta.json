@@ -1,0 +1,16 @@
+{
+  "title": "GOP vs Consulting Firms: Operators, Not Advisors",
+  "description": "How GOP's operator-led model differs from traditional consulting firms: who does the work, what gets delivered, accountability and results.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/gop-vs-consultants/#page",
+      "url": "https://gop.sbssdigital.com/gop-vs-consultants/",
+      "name": "GOP vs consulting firms",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      }
+    }
+  ]
+}

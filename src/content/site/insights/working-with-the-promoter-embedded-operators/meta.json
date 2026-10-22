@@ -1,0 +1,30 @@
+{
+  "title": "Working With Promoters: Embedded Operators | GOP",
+  "description": "How embedded operators work alongside promoters, from diagnostic to implementation, what the first 90 days look like, and what makes the work succeed.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/working-with-the-promoter-embedded-operators/#article",
+      "headline": "Working with the promoter: how embedded operators deliver",
+      "description": "How operator-led engagements work alongside promoters, from diagnostic to implementation, and what makes them succeed.",
+      "url": "https://gop.sbssdigital.com/insights/working-with-the-promoter-embedded-operators/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/working-with-the-promoter-embedded-operators/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/diagnostic-roadmap-implementation-engagement-model.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Working with consultants and being found"
+}

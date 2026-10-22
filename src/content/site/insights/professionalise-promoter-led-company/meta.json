@@ -1,0 +1,30 @@
+{
+  "title": "Professionalising a Promoter-Led Company | GOP",
+  "description": "How to move a promoter-led company from founder-dependent decisions to a management team, operating rhythm and MIS that run the business.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/professionalise-promoter-led-company/#article",
+      "headline": "How to professionalise management in a promoter-led company",
+      "description": "How to move from promoter-dependent decisions to a management team and systems that run the business.",
+      "url": "https://gop.sbssdigital.com/insights/professionalise-promoter-led-company/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/professionalise-promoter-led-company/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/five-levers-manufacturing-transformation.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Investment readiness and governance"
+}

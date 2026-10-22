@@ -1,0 +1,30 @@
+{
+  "title": "How to Choose a Business Transformation Consultant | GOP",
+  "description": "How to choose a business transformation consultant: seven questions to ask, red flags to watch for, and why operator experience changes the outcome.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/choosing-a-business-transformation-consultant/#article",
+      "headline": "Choosing a consultant: operators vs advisors",
+      "description": "Questions to ask, red flags to watch for, and how operator experience changes the outcome of a transformation.",
+      "url": "https://gop.sbssdigital.com/insights/choosing-a-business-transformation-consultant/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/choosing-a-business-transformation-consultant/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#mahaveer"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/operator-led-vs-advisory-consulting-comparison.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Working with consultants and being found"
+}

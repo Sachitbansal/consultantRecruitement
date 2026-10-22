@@ -1,0 +1,45 @@
+{
+  "title": "Commercial Excellence & Value Capture | GOP",
+  "description": "Recover margin already inside your business: pricing, discounts, key accounts and sales process. GOP operators run Lever 2 of the Five Levers.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/#service",
+      "name": "Commercial Excellence & Value Capturing",
+      "serviceType": "Commercial Excellence & Value Capturing",
+      "description": "GOP fixes pricing, margin, key-account and sales-process leakage before any new demand is bought. The aim is to recover value that is already inside the current order book, then build the routines that stop it leaking again.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led manufacturers, INR 150-500 crore revenue"
+      },
+      "url": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/#webpage",
+      "url": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/",
+      "name": "Commercial Excellence & Value Capture | GOP",
+      "description": "Recover margin already inside your business: pricing, discounts, key accounts and sales process. GOP operators run Lever 2 of the Five Levers.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23"
+    }
+  ]
+}

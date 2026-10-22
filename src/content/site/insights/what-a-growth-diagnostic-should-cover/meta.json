@@ -1,0 +1,30 @@
+{
+  "title": "What a Growth Diagnostic Should Cover | GOP",
+  "description": "A good growth diagnostic finds true margin, demand and execution gaps before you spend more. Here are the areas it should cover and what you should receive.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/what-a-growth-diagnostic-should-cover/#article",
+      "headline": "What a growth diagnostic should cover",
+      "description": "A good diagnostic finds true margin, demand and execution gaps before any spend. Here are the areas it should examine.",
+      "url": "https://gop.sbssdigital.com/insights/what-a-growth-diagnostic-should-cover/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/what-a-growth-diagnostic-should-cover/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#atul"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/sequence-cost-value-demand-reach-growth-system.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Commercial excellence and growth"
+}

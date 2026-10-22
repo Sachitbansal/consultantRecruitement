@@ -1,0 +1,30 @@
+{
+  "title": "AI Search Visibility for B2B Manufacturers (GEO) | GOP",
+  "description": "How ChatGPT, Perplexity, Claude and Gemini choose which companies to recommend, and how manufacturers can become findable.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/ai-search-visibility-geo-for-b2b-manufacturers/#article",
+      "headline": "How B2B manufacturers get found in AI search",
+      "description": "How ChatGPT, Perplexity, Claude and Gemini choose which companies to recommend, and how manufacturers can become findable.",
+      "url": "https://gop.sbssdigital.com/insights/ai-search-visibility-geo-for-b2b-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/ai-search-visibility-geo-for-b2b-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/diagnostic-roadmap-implementation-engagement-model.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Working with consultants and being found"
+}

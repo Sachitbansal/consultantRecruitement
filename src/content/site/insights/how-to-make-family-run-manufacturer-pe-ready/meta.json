@@ -1,0 +1,30 @@
+{
+  "title": "How to Make a Family-Run Manufacturer PE-Ready | GOP",
+  "description": "What private equity investors check in promoter-led manufacturers, where family-run companies stall, and the 90-day steps that raise readiness.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/how-to-make-family-run-manufacturer-pe-ready/#article",
+      "headline": "How to make a family-run manufacturing business PE-ready",
+      "description": "What private equity investors check in promoter-led manufacturers, and the 90-day steps that raise investor readiness.",
+      "url": "https://gop.sbssdigital.com/insights/how-to-make-family-run-manufacturer-pe-ready/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/how-to-make-family-run-manufacturer-pe-ready/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/pe-readiness-90-day-roadmap-promoter-led-manufacturer.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Investment readiness and governance"
+}

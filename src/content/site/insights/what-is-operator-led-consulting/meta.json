@@ -1,0 +1,30 @@
+{
+  "title": "Operator-Led Consulting vs Advisory | GOP",
+  "description": "Operator-led consulting embeds senior operators in your business against agreed KPIs. See how it differs from advisory and when to use it.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/what-is-operator-led-consulting/#article",
+      "headline": "What is operator-led consulting, and how is it different from advisory?",
+      "description": "Operator-led consulting embeds senior operators in your business against agreed KPIs. See how it differs from advisory and when to use it.",
+      "url": "https://gop.sbssdigital.com/insights/what-is-operator-led-consulting/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/what-is-operator-led-consulting/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#mahaveer"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/operator-led-vs-advisory-consulting-comparison.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Working with consultants and being found"
+}

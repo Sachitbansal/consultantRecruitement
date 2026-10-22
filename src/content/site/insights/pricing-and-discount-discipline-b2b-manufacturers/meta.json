@@ -1,0 +1,30 @@
+{
+  "title": "Pricing and Discount Discipline for B2B Manufacturers | GOP",
+  "description": "How B2B manufacturers can stop margin leakage from discounts, special terms and unprofitable accounts, and price on value instead of habit.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/pricing-and-discount-discipline-b2b-manufacturers/#article",
+      "headline": "Pricing and discount discipline for B2B manufacturers",
+      "description": "How to stop margin leakage from discounts and concessions, and set prices based on value and customer profitability.",
+      "url": "https://gop.sbssdigital.com/insights/pricing-and-discount-discipline-b2b-manufacturers/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/pricing-and-discount-discipline-b2b-manufacturers/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#mahaveer"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/sequence-cost-value-demand-reach-growth-system.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Commercial excellence and growth"
+}

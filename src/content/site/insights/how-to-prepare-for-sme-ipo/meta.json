@@ -1,0 +1,30 @@
+{
+  "title": "SME IPO Preparation: A Practical Guide for Manufacturers | GOP",
+  "description": "What a promoter-led manufacturer needs in place before an SME IPO: financials, governance, growth story and readiness steps.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/how-to-prepare-for-sme-ipo/#article",
+      "headline": "How to prepare for an SME IPO",
+      "description": "What a promoter-led manufacturer needs in place before an SME IPO: financials, governance, growth story and readiness steps.",
+      "url": "https://gop.sbssdigital.com/insights/how-to-prepare-for-sme-ipo/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/how-to-prepare-for-sme-ipo/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/pe-readiness-90-day-roadmap-promoter-led-manufacturer.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Investment readiness and governance"
+}

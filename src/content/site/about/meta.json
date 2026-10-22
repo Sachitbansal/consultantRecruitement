@@ -1,0 +1,19 @@
+{
+  "title": "About GOP: Growth Operating Partners | SBSSdigital Vertical",
+  "description": "GOP is the growth consulting and strategy execution vertical of SBSSdigital, built by IIM Calcutta Executive Programme cohort mates.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://gop.sbssdigital.com/about/#page",
+      "url": "https://gop.sbssdigital.com/about/",
+      "name": "About GOP",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      }
+    }
+  ]
+}

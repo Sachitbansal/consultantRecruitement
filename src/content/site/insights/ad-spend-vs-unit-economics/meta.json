@@ -1,0 +1,30 @@
+{
+  "title": "Ad Spend vs Unit Economics: Fix Margin Before Scaling | GOP",
+  "description": "Paid growth compresses margin when unit economics are weak. Here is the sequence that protects profit while you scale demand, with metrics to watch.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/ad-spend-vs-unit-economics/#article",
+      "headline": "Why scaling ad spend before fixing unit economics burns cash",
+      "description": "Paid growth compresses margin. Here is the sequence that protects profit while you scale demand.",
+      "url": "https://gop.sbssdigital.com/insights/ad-spend-vs-unit-economics/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/ad-spend-vs-unit-economics/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#atul"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/sequence-cost-value-demand-reach-growth-system.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Commercial excellence and growth"
+}

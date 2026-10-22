@@ -1,0 +1,30 @@
+{
+  "title": "How to Cut Changeover Time: A Practical SMED Guide | GOP",
+  "description": "A step-by-step method to reduce changeover time, with an anonymised press-shop example that cut it from 70 to 40 minutes.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/how-to-cut-changeover-time-smed/#article",
+      "headline": "How to cut changeover time in a press shop or machining line",
+      "description": "A step-by-step method to reduce changeover time, with an anonymised press-shop example that cut it from 70 to 40 minutes.",
+      "url": "https://gop.sbssdigital.com/insights/how-to-cut-changeover-time-smed/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/how-to-cut-changeover-time-smed/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/result-press-shop-changeover-70-to-40-minutes.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Operations and supplier development"
+}

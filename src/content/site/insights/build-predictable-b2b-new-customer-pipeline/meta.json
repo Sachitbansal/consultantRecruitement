@@ -1,0 +1,30 @@
+{
+  "title": "Build a Predictable B2B Pipeline for Manufacturers | GOP",
+  "description": "A step-by-step system for finding, qualifying and converting new B2B customers, so the sales pipeline no longer depends on the promoter alone.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/build-predictable-b2b-new-customer-pipeline/#article",
+      "headline": "How to build a predictable new-customer pipeline",
+      "description": "A step-by-step system for finding, qualifying and converting new B2B customers without relying on the promoter.",
+      "url": "https://gop.sbssdigital.com/insights/build-predictable-b2b-new-customer-pipeline/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/build-predictable-b2b-new-customer-pipeline/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/team/#mahaveer"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/five-levers-manufacturing-transformation.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Commercial excellence and growth"
+}

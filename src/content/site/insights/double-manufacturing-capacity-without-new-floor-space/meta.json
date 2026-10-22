@@ -1,0 +1,30 @@
+{
+  "title": "Double Manufacturing Capacity Without New Floor Space | GOP",
+  "description": "Flow, takt and pull redesign can raise manufacturing output on the same footprint. See the method, what to measure first, and anonymised results.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Article",
+      "@id": "https://gop.sbssdigital.com/insights/double-manufacturing-capacity-without-new-floor-space/#article",
+      "headline": "How manufacturers can double capacity without new floor space",
+      "description": "Flow, takt and pull redesign can raise output on the same footprint. See the anonymised results and the method.",
+      "url": "https://gop.sbssdigital.com/insights/double-manufacturing-capacity-without-new-floor-space/",
+      "mainEntityOfPage": "https://gop.sbssdigital.com/insights/double-manufacturing-capacity-without-new-floor-space/",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "image": "https://gop.sbssdigital.com/assets/img/result-fabrication-capacity-50-to-100-units.webp",
+      "articleSection": "Insights"
+    }
+  ],
+  "category": "Operations and supplier development"
+}

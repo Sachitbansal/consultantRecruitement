@@ -1,0 +1,111 @@
+{
+  "title": "GOP Insights: Answers for Manufacturers",
+  "description": "Answers on PE readiness, SME IPO, capacity, pricing, pipeline, governance and choosing a consultant, from GOP operators.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://gop.sbssdigital.com/insights/#page",
+      "url": "https://gop.sbssdigital.com/insights/",
+      "name": "GOP Insights",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "url": "https://gop.sbssdigital.com/insights/how-to-make-family-run-manufacturer-pe-ready/",
+            "name": "How to make a family-run manufacturing business PE-ready"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "url": "https://gop.sbssdigital.com/insights/what-is-operator-led-consulting/",
+            "name": "What is operator-led consulting, and how is it different from advisory?"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "url": "https://gop.sbssdigital.com/insights/how-to-prepare-for-sme-ipo/",
+            "name": "How to prepare for an SME IPO"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "url": "https://gop.sbssdigital.com/insights/double-manufacturing-capacity-without-new-floor-space/",
+            "name": "How manufacturers can double capacity without new floor space"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "url": "https://gop.sbssdigital.com/insights/what-a-growth-diagnostic-should-cover/",
+            "name": "What a growth diagnostic should cover"
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "url": "https://gop.sbssdigital.com/insights/ad-spend-vs-unit-economics/",
+            "name": "Why scaling ad spend before fixing unit economics burns cash"
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "url": "https://gop.sbssdigital.com/insights/build-predictable-b2b-new-customer-pipeline/",
+            "name": "How to build a predictable new-customer pipeline"
+          },
+          {
+            "@type": "ListItem",
+            "position": 8,
+            "url": "https://gop.sbssdigital.com/insights/oem-supplier-development-tier-2-tier-3/",
+            "name": "OEM supplier development: what Tier-2 and Tier-3 suppliers need"
+          },
+          {
+            "@type": "ListItem",
+            "position": 9,
+            "url": "https://gop.sbssdigital.com/insights/professionalise-promoter-led-company/",
+            "name": "How to professionalise management in a promoter-led company"
+          },
+          {
+            "@type": "ListItem",
+            "position": 10,
+            "url": "https://gop.sbssdigital.com/insights/governance-and-mis-for-mid-size-manufacturers/",
+            "name": "Governance and MIS a mid-size manufacturer needs"
+          },
+          {
+            "@type": "ListItem",
+            "position": 11,
+            "url": "https://gop.sbssdigital.com/insights/how-to-cut-changeover-time-smed/",
+            "name": "How to cut changeover time in a press shop or machining line"
+          },
+          {
+            "@type": "ListItem",
+            "position": 12,
+            "url": "https://gop.sbssdigital.com/insights/choosing-a-business-transformation-consultant/",
+            "name": "Choosing a consultant: operators vs advisors"
+          },
+          {
+            "@type": "ListItem",
+            "position": 13,
+            "url": "https://gop.sbssdigital.com/insights/pricing-and-discount-discipline-b2b-manufacturers/",
+            "name": "Pricing and discount discipline for B2B manufacturers"
+          },
+          {
+            "@type": "ListItem",
+            "position": 14,
+            "url": "https://gop.sbssdigital.com/insights/ai-search-visibility-geo-for-b2b-manufacturers/",
+            "name": "How B2B manufacturers get found in AI search"
+          },
+          {
+            "@type": "ListItem",
+            "position": 15,
+            "url": "https://gop.sbssdigital.com/insights/working-with-the-promoter-embedded-operators/",
+            "name": "Working with the promoter: how embedded operators deliver"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "title": "GOP | Operator-Led Business Transformation for Manufacturers",
+  "description": "GOP is the growth consulting and execution vertical of SBSSdigital. Senior operators from the IIM Calcutta network transform promoter-led manufacturers.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/#webpage",
+      "url": "https://gop.sbssdigital.com/",
+      "name": "GOP - Growth Operating Partners",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "inLanguage": "en-IN",
+      "dateModified": "2026-10-23"
+    }
+  ],
+  "modified": "2026-10-23"
+}

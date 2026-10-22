@@ -29,8 +29,8 @@ const SMTP_USER = process.env.SMTP_USER ?? "noreply@sbssdigital.com";
 const SMTP_PASS = process.env.SMTP_PASS ?? "";
 const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "noreply@sbssdigital.com";
 const FROM_NAME = process.env.CONTACT_FROM_NAME ?? "Growth Operating Partners";
-const TO_EMAIL = process.env.CONTACT_TO_EMAIL ?? "avneesh.bansal@sbssdigital.com";
-const TO_NAME = process.env.CONTACT_TO_NAME ?? "Avneesh Bansal";
+const TO_EMAIL = process.env.CONTACT_TO_EMAIL ?? "gop@sbssdigital.com";
+const TO_NAME = process.env.CONTACT_TO_NAME ?? "GOP";
 const SEND_ACK = (process.env.CONTACT_SEND_ACK ?? "true") !== "false";
 const VERIFY_EMAIL_DOMAIN =
   (process.env.CONTACT_VERIFY_EMAIL_DOMAIN ?? "true") !== "false";
