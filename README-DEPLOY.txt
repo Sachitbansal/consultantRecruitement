@@ -93,22 +93,13 @@ exists, so there is nothing to redirect.
      second sentence where there is room.
 
 
-3. TEAM PHOTOS (placeholders today)
------------------------------------
+3. TEAM PHOTOS
+--------------
   public/assets/img/team-atul-saxena.webp
   public/assets/img/team-mahaveer-upadhyaya.webp
-are 640x640 navy placeholders with initials. To swap in real photos:
-  1. Crop each photo square and export WebP at 640x640, ideally under 80 KB
-     (e.g. `cwebp -q 82 -resize 640 640 in.jpg -o team-atul-saxena.webp`).
-  2. Overwrite the two files with the SAME names. Do not rename them.
-  3. In src/content/site/our-people/page.html: delete the two
-     "<figcaption>Illustrative portrait</figcaption>" captions and the
-     "Portraits above are placeholders..." note, and drop "(placeholder
-     portrait)" from both alt texts.
-  4. Rebuild (section 1c).
-Images under /assets are cached by browsers for 30 days. A visitor who already
-has the placeholder cached may keep seeing it for up to a month unless they
-force-refresh.
+are the real photos (24 Oct 2026), cropped square, 640x640 WebP. To replace
+one, export a square 640x640 WebP under the same file name and rebuild.
+Images under /assets are cached by browsers for up to 30 days.
 
 
 4. EDITING CONTENT
