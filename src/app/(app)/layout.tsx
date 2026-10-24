@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/lib/gop-content";
 import "./globals.css";
 
@@ -9,15 +9,19 @@ import "./globals.css";
 //
 // Variable names are --font-display / --font-sans because globals.css and
 // tailwind.config.ts both reference those two variables.
-const display = Fraunces({
-  subsets: ["latin"],
-  axes: ["opsz"],
+//
+// Self-hosted (Google Fonts latin variable files in ./fonts) so the Docker
+// build never needs to reach fonts.googleapis.com.
+const display = localFont({
+  src: "./fonts/fraunces-latin-var.woff2",
+  weight: "100 900",
   variable: "--font-display",
   display: "swap",
 });
 
-const sans = Inter({
-  subsets: ["latin"],
+const sans = localFont({
+  src: "./fonts/inter-latin-var.woff2",
+  weight: "100 900",
   variable: "--font-sans",
   display: "swap",
 });
