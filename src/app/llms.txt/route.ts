@@ -9,7 +9,7 @@ export const dynamic = "force-static";
  * including new insights, is listed with its own one-line summary.
  */
 export function GET() {
-  const pages = getAllPages();
+  const pages = getAllPages().filter((p) => !p.meta.noindex);
   const line = (p: SitePage) => `- [${h1Of(p.html)}](${abs(p.path)}): ${p.meta.description}`;
   const hubs = pages.filter((p) => p.kind === "hub");
   const levers = pages.filter((p) => p.kind === "lever");
@@ -17,10 +17,10 @@ export function GET() {
 
   const text = `# ${site.name}
 
-> ${site.about} GOP helps promoter-led and family-owned manufacturers with INR 150-500 crore revenue transform into institution-grade enterprises, working as operators alongside the promoter. ${site.tagline} ${site.hindi}
+> ${site.about} ${site.origin} It works with business promoters (primarily INR 150-500 crore revenue, with deep manufacturing experience), prospective investors and PE/VC funds. GOP does not invest its own capital. ${site.hindi}
 
 - Contact: ${site.email} (no phone or office address is published)
-- Enquiries: ${abs("/enquiry/")}
+- Enquiries: ${abs("/contact/")}
 - LinkedIn: ${site.linkedin}
 - Parent company: ${site.parent.name}, ${site.parent.url}
 - Founded: ${site.foundingDate}; serves clients across India
@@ -29,9 +29,9 @@ export function GET() {
 
 - [Home](${site.url}): ${pages.find((p) => p.kind === "home")?.meta.description}
 ${hubs.map(line).join("\n")}
-- [Book a free diagnostic call](${abs("/enquiry/")}): Contact form and email for enquiries.
+- [Contact](${abs("/contact/")}): Enquiry form and email for business promoters, investors and PE/VC funds.
 
-## The Five Levers
+## Services
 
 ${levers.map(line).join("\n")}
 

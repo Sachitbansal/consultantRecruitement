@@ -11,6 +11,7 @@ const esc = (s: string) =>
 /** Every content image, listed under the page that shows it. */
 export function GET() {
   const urls = getAllPages()
+    .filter((page) => !page.meta.noindex)
     .map((page) => {
       const images = Array.from(
         page.html.matchAll(/<img src="([^"]+)" alt="([^"]*)"/g),

@@ -14,7 +14,7 @@
       "dateModified": "2026-10-23",
       "inLanguage": "en-IN",
       "author": {
-        "@id": "https://gop.sbssdigital.com/team/#mahaveer"
+        "@id": "https://gop.sbssdigital.com/our-people/#mahaveer"
       },
       "publisher": {
         "@id": "https://gop.sbssdigital.com/#organization"
@@ -22,9 +22,9 @@
       "isPartOf": {
         "@id": "https://gop.sbssdigital.com/#website"
       },
-      "image": "https://gop.sbssdigital.com/assets/img/five-levers-manufacturing-transformation.webp",
+      "image": "https://gop.sbssdigital.com/assets/img/five-value-creation-levers.webp",
       "articleSection": "Insights"
     }
   ],
-  "category": "Commercial excellence and growth"
+  "category": "Profitable Growth"
 }

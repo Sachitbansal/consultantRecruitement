@@ -10,6 +10,24 @@ const securityHeaders = [
 
 const noindex = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
 
+// Marketing URLs renamed on 24 October 2026, mapped to their replacements.
+// Each is listed with and without the trailing slash, because
+// skipTrailingSlashRedirect makes them distinct paths.
+const MOVED = {
+  '/what-we-do/operational-excellence': '/services/operational-excellence/',
+  '/what-we-do/commercial-excellence': '/services/commercial-excellence/',
+  '/what-we-do/demand-generation': '/services/commercial-excellence/',
+  '/what-we-do/new-business-development': '/services/profitable-growth/',
+  '/what-we-do/governance-investment-readiness': '/services/investment-readiness/',
+  '/services': '/what-we-do/',
+  '/how-we-work': '/our-approach/',
+  '/team': '/our-people/',
+  '/results': '/experience-outcomes/',
+  '/who-we-help': '/business-promoters/',
+  '/enquiry': '/contact/',
+  '/enquiry/thanks': '/contact/thanks/',
+};
+
 const nextConfig = {
   // Required for Docker: produces a minimal self-contained server bundle
   // (.next/standalone) that doesn't need node_modules copied wholesale
@@ -34,7 +52,12 @@ const nextConfig = {
   // With skipTrailingSlashRedirect on, /api/x/ would otherwise be served
   // as-is. Keep the 308 to /api/x that the app always had.
   async redirects() {
-    return [{ source: '/api/:path+/', destination: '/api/:path+', permanent: true }];
+    return [
+      { source: '/api/:path+/', destination: '/api/:path+', permanent: true },
+      ...Object.entries(MOVED).flatMap(([from, to]) =>
+        [from, `${from}/`].map((source) => ({ source, destination: to, permanent: true })),
+      ),
+    ];
   },
 
   async headers() {

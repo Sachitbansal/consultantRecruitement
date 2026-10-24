@@ -1,21 +1,20 @@
 import { cta } from "@/lib/gop-content";
-
-const links = [
-  { href: "/what-we-do/", label: "What we do" },
-  { href: "/how-we-work/", label: "How we work" },
-  { href: "/results/", label: "Results" },
-  { href: "/team/", label: "Team" },
-  { href: "/insights/", label: "Insights" },
-];
+import { audienceLinks, mainAfterServices, services } from "./nav";
 
 /**
  * Plain <a> links, not next/link: every marketing page is static HTML, and a
  * full navigation keeps the CSS-only burger (checkbox) from staying open
- * across pages.
+ * across pages. "What We Do" is a <details> dropdown for the same reason.
  */
 export default function SiteHeader({ current }: { current: string }) {
   const isCurrent = (href: string) =>
     current === href || (href !== "/" && current.startsWith(href));
+  const inServices = current === "/what-we-do/" || current.startsWith("/services/");
+  const link = (l: { href: string; label: string }) => (
+    <a key={l.href} href={l.href} aria-current={isCurrent(l.href) ? "page" : undefined}>
+      {l.label}
+    </a>
+  );
   return (
     <header className="site-header">
       <div className="wrap hdr">
@@ -35,15 +34,15 @@ export default function SiteHeader({ current }: { current: string }) {
           <span />
         </label>
         <nav className="nav" aria-label="Main">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              aria-current={isCurrent(link.href) ? "page" : undefined}
-            >
-              {link.label}
-            </a>
-          ))}
+          {audienceLinks.map(link)}
+          <details className="dd">
+            <summary data-current={inServices ? "" : undefined}>What We Do</summary>
+            <div className="ddmenu">
+              {link({ href: "/what-we-do/", label: "All capabilities" })}
+              {services.map(link)}
+            </div>
+          </details>
+          {mainAfterServices.map(link)}
           <a
             className="navcta"
             href={cta.href}

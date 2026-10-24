@@ -1,0 +1,44 @@
+{
+  "title": "Commercial Excellence and Brand Growth | GOP",
+  "description": "GOP recovers margin through pricing and sales discipline, then builds brand and demand: positioning, content, search and AI visibility, measured on margin.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/commercial-excellence/#service",
+      "name": "Commercial Excellence and Brand Growth",
+      "serviceType": "Commercial Excellence and Brand Growth",
+      "description": "GOP first recovers margin already inside the order book by fixing pricing, discounts, key-account plans and the sales process. It then builds the brand and demand engine: clear positioning, answer-first content, search and AI-search visibility and channel strategy, with customer acquisition cost tracked against margin.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/commercial-excellence/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/commercial-excellence/#page",
+      "url": "https://gop.sbssdigital.com/services/commercial-excellence/",
+      "name": "Commercial Excellence and Brand Growth | GOP",
+      "description": "GOP recovers margin through pricing and sales discipline, then builds brand and demand: positioning, content, search and AI visibility, measured on margin.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/commercial-excellence/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-23"
+    }
+  ]
+}

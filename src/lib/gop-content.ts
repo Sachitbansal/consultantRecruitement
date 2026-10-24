@@ -1,108 +1,126 @@
 /**
- * Copy for the /enquiry/ page and the contact form, plus the site-wide facts
+ * Copy for the /contact/ page and the contact form, plus the site-wide facts
  * every page shares.
  *
  * The other marketing pages are HTML fragments in src/content/site/ — see
- * src/lib/site-pages.ts. Only the enquiry page is React, because it hosts the
+ * src/lib/site-pages.ts. Only the contact page is React, because it hosts the
  * interactive ContactForm.
  */
 
 export const site = {
   name: "GOP - Growth Operating Partners",
   short: "GOP",
-  tagline: "Operator-led Growth. Investor-ready Outcomes.",
+  /** Primary headline. Do not replace with generic institutional language. */
+  headline: "We Build Businesses That Grow Profitably and Attract Capital.",
+  /** Supporting statement, used as the slogan and footer line. */
+  tagline:
+    "Operator-led growth, institutional readiness and value creation for promoter-led businesses.",
   hindi: "Investment se pehle bhi. Investment ke baad bhi.",
   url: "https://gop.sbssdigital.com/",
   email: "gop@sbssdigital.com",
   linkedin: "https://www.linkedin.com/showcase/growthoperatingpartners/",
   parent: { name: "SBSSdigital", url: "https://sbssdigital.com" },
   foundingDate: "2021",
-  /** The one-line description. Keep it word-for-word identical everywhere. */
+  /**
+   * The standard brand description. Keep it word-for-word identical on the
+   * website, company profile, LinkedIn and business development material.
+   */
   about:
+    "GOP is an operator-led growth and value-creation partner that helps promoter-led businesses scale profitably, become investment-ready, access growth capital, and deliver measurable returns after investment.",
+  /** Where GOP comes from: the parent-company and credential line. */
+  origin:
     "GOP (Growth Operating Partners) is the growth consulting and strategy execution vertical of SBSSdigital. Several cohort mates from the IIM Calcutta Executive Programme have come together to build and scale GOP, an operator-led collective of senior professionals with 100+ years of combined hands-on experience.",
   ogImage: "/assets/img/og-gop-operator-led-growth.png",
 };
 
-/** Primary call to action, used on every page. */
-export const cta = { label: "Book a Free Diagnostic Call", href: "/enquiry/" };
+/** Primary call to action, used in the header on every page. */
+export const cta = { label: "Start a Conversation", href: "/contact/" };
+
+/** The three audience journeys. `id` is the contact form's "I am a" value. */
+export const audiences = [
+  { id: "promoter", label: "Business Promoter", href: "/business-promoters/", cta: "Discuss Your Business Growth" },
+  { id: "investor", label: "Investor", href: "/investors/", cta: "Start an Investor Conversation" },
+  { id: "fund", label: "PE/VC Fund", href: "/pe-vc-funds/", cta: "Discuss Portfolio Value Creation" },
+];
 
 export const enquiry = {
   hero: {
-    heading: "Book a free diagnostic call with GOP",
-    sub: "We turn promoter-led businesses into institution-grade enterprises: reducing promoter dependency and building the systems that let you scale profitably, faster. So when you raise capital, bring in a partner, or plan an exit, your business is valued for what it's actually worth.",
+    heading: "Let’s Start with the Business Challenge.",
+    sub: "Whether you want to grow a business, explore an investment opportunity or improve portfolio performance, tell us what you are trying to achieve.",
   },
   answer:
-    "Fill in the form below or email gop@sbssdigital.com. Tell us where your business is today and where you want it to be. A senior GOP operator will reply within two business days to set up a free diagnostic call: no pitch, no obligation, and an honest read on whether and how we can help.",
-  moment: {
-    heading: "The moment you're in",
-    paragraphs: [
-      "Your order book is strong. The market opportunity is real. But growth is starting to outpace your systems. Costing is fuzzy. MIS is outdated. Working capital is stretched thinner every quarter.",
-      "And when an investor or a larger customer asks for numbers that hold up under scrutiny, you're not fully ready to hand them over.",
-    ],
-    pull: "You don't need another consulting report. You need someone who has actually run a business like yours to sit beside you and fix it.",
-  },
-  changes: {
-    heading: "What changes",
-    intro: "Less dependence on you. More clarity for everyone else.",
+    "Use the form below or email gop@sbssdigital.com. Tell us who you are, what you want to achieve and what is in the way. The team reviews every enquiry and replies where there is a suitable next step. For business promoters, the first step is usually a free diagnostic conversation about the business.",
+  audiences: {
+    heading: "What to tell us",
+    intro: "A few lines are enough to start. Please do not send confidential financial documents through this form.",
     columns: [
       {
-        title: "For you, the promoter",
+        title: "Business promoters",
         items: [
-          "MIS and trackers that keep you connected to the ground, without being in every conversation",
-          "A business that runs without depending on you being everywhere at once",
-          "Confidence to walk into a diligence room",
+          "Where the business is today: revenue band, sector, markets",
+          "What you want it to achieve over the next two to three years",
+          "What is holding growth, margins or readiness back",
+          "Whether you are considering growth capital",
         ],
       },
       {
-        title: "For your people",
+        title: "Investors",
         items: [
-          "Clear KPIs and KRAs, with no ambiguity about what “good” looks like",
-          "Skill gaps closed with real tools, not just training decks",
-          "Faster, more confident decisions with less hand-holding",
+          "The kind of businesses and stage you are interested in",
+          "Whether you want to hear about businesses preparing to raise growth capital",
+          "Any business you would like to introduce to GOP",
         ],
       },
       {
-        title: "For the business",
+        title: "PE/VC funds",
         items: [
-          "Stronger topline and healthier margins",
-          "A brand that communicates its true value to the market",
-          "A valuation that reflects what's actually been built",
+          "The portfolio company or opportunity in question",
+          "The investment thesis and what must happen after investment",
+          "Where execution is falling behind the plan",
         ],
       },
     ],
   },
   steps: {
     heading: "How it starts",
-    intro: "Three steps. No obligation until you're ready.",
+    intro: "No obligation on either side until there is a clear fit.",
     items: [
       {
-        title: "A free diagnostic call",
-        body: "No pitch, no obligation: just an honest read on where your business stands and where the gaps are.",
+        title: "An initial conversation",
+        body: "We discuss the business, the objective and the challenge. For promoters this can be a free diagnostic conversation: an honest first read on where the gaps are.",
       },
       {
-        title: "A focused engagement plan",
-        body: "We tell you exactly what we'll fix, in what order, and how we'll measure it.",
+        title: "A mutual fit check",
+        body: "Both sides decide whether GOP's capabilities fit the need. If they do not, we say so.",
       },
       {
-        title: "Hands-on execution",
-        body: "We work inside your business until the systems are running and the results are visible.",
+        title: "An agreed scope",
+        body: "If there is a fit, we agree the scope, responsibilities, expected outputs and how progress will be measured.",
       },
     ],
-  },
-  fit: {
-    heading: "Who we work best with",
-    statement:
-      "Promoter-led and family-owned manufacturers in the ₹150–500 crore revenue range: businesses with real momentum that are ready to professionalise, but haven't found the right partner to do it with.",
   },
 };
 
 export const contact = {
-  heading: "Tell us about your business",
+  heading: "Tell us what you are trying to achieve",
   email: site.email,
-  responseTime: "Within 2 business days",
-  submitLabel: cta.label,
-  consent:
-    "By submitting, you agree to be contacted about your enquiry. We don't share your information.",
+  submitLabel: "Send Enquiry",
+  personas: [
+    { value: "promoter", label: "Business Promoter" },
+    { value: "investor", label: "Investor" },
+    { value: "fund", label: "PE/VC Fund" },
+    { value: "other", label: "Other" },
+  ],
+  topics: [
+    "Profitable growth and market expansion",
+    "Commercial excellence and brand growth",
+    "Operational excellence and margin improvement",
+    "Governance and investment readiness",
+    "Raising growth capital",
+    "Post-investment or portfolio value creation",
+    "Digital growth and AI",
+    "Something else",
+  ],
   revenueOptions: [
     "Below ₹150 crore",
     "₹150–300 crore",

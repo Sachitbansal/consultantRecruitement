@@ -1,0 +1,21 @@
+{
+  "title": "Business Growth and Investment Readiness | GOP",
+  "description": "Operator-led support for promoters: profitable growth, stronger operations, management systems, investment readiness and raising growth capital.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/business-promoters/#page",
+      "url": "https://gop.sbssdigital.com/business-promoters/",
+      "name": "For Business Promoters",
+      "description": "Operator-led support for promoters: profitable growth, stronger operations, management systems, investment readiness and raising growth capital.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "inLanguage": "en-IN"
+    }
+  ]
+}

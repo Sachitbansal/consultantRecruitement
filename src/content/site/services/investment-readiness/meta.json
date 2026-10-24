@@ -1,0 +1,44 @@
+{
+  "title": "Governance and Investment Readiness | GOP",
+  "description": "GOP prepares promoter-led businesses for investment: MIS, governance, delegation, management depth and diligence readiness, before an investor asks.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/investment-readiness/#service",
+      "name": "Governance and Investment Readiness",
+      "serviceType": "Governance and Investment Readiness",
+      "description": "Investors fund institutions, not individuals. GOP helps promoter-led businesses build what an outsider needs to trust: reporting that reconciles, true margin by product and customer, governance and delegation that do not depend on one person, management depth, and a growth plan that shows how capital turns into earnings.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/investment-readiness/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/investment-readiness/#page",
+      "url": "https://gop.sbssdigital.com/services/investment-readiness/",
+      "name": "Governance and Investment Readiness | GOP",
+      "description": "GOP prepares promoter-led businesses for investment: MIS, governance, delegation, management depth and diligence readiness, before an investor asks.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/investment-readiness/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-23"
+    }
+  ]
+}

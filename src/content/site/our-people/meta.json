@@ -1,0 +1,66 @@
+{
+  "title": "Our People: The Operators Behind GOP | GOP",
+  "description": "Meet GOP's people: Project Delivery Partners Atul Saxena and Mahaveer Upadhyaya, and a collective with 100+ years of combined hands-on experience.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Person",
+      "@id": "https://gop.sbssdigital.com/our-people/#atul",
+      "name": "Atul Saxena",
+      "jobTitle": "Project Delivery Partner",
+      "description": "25+ years in business transformation, value capture and scaling operations; owns diagnostics and roadmaps at GOP.",
+      "image": "https://gop.sbssdigital.com/assets/img/team-atul-saxena.webp",
+      "worksFor": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "url": "https://gop.sbssdigital.com/our-people/#atul",
+      "knowsAbout": [
+        "Business transformation",
+        "Go-to-market strategy",
+        "Demand generation",
+        "Brand building",
+        "Growth diagnostics"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://gop.sbssdigital.com/our-people/#mahaveer",
+      "name": "Mahaveer Upadhyaya",
+      "jobTitle": "Project Delivery Partner",
+      "description": "28 years of sales, marketing and P&L leadership across telecom, media, industrial and consumer sectors.",
+      "image": "https://gop.sbssdigital.com/assets/img/team-mahaveer-upadhyaya.webp",
+      "worksFor": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "url": "https://gop.sbssdigital.com/our-people/#mahaveer",
+      "knowsAbout": [
+        "Commercial excellence",
+        "Sales and marketing",
+        "New business development",
+        "P&L management"
+      ],
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Indian Institute of Technology Delhi"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Walchand College of Engineering, Sangli"
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/our-people/#page",
+      "url": "https://gop.sbssdigital.com/our-people/",
+      "name": "Our people",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      }
+    }
+  ]
+}

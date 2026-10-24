@@ -32,6 +32,8 @@ export interface PageMeta {
   nodes: JsonLdNode[];
   /** Insights only: the heading it is listed under on /insights/. */
   category?: string;
+  /** Kept out of search, the sitemaps and llms.txt (e.g. legal drafts under review). */
+  noindex?: boolean;
 }
 
 export interface SitePage {
@@ -48,7 +50,7 @@ export interface SitePage {
 
 function kindOf(route: string): PageKind {
   if (route === "") return "home";
-  if (route.startsWith("what-we-do/")) return "lever";
+  if (route.startsWith("services/")) return "lever";
   if (route.startsWith("insights/")) return "article";
   return "hub";
 }
@@ -109,11 +111,14 @@ const INSIGHTS_INDEX = "<!-- insights-index -->";
 
 /** Display order on /insights/. A category not listed here goes last. */
 const CATEGORY_ORDER = [
-  "Investment readiness and governance",
-  "Finance, costing and reporting",
-  "Operations and supplier development",
-  "Commercial excellence and growth",
-  "Working with consultants and being found",
+  "Profitable Growth",
+  "Commercial Excellence",
+  "Operational Improvement",
+  "Investment Readiness",
+  "Growth Capital",
+  "Portfolio Value Creation",
+  "Digital Growth and AI",
+  "Governance and Leadership",
 ];
 
 const escapeHtml = (s: string) =>
@@ -194,6 +199,27 @@ export function faqOf(html: string): { q: string; a: string }[] {
   );
 }
 
+/**
+ * The FAQ section as an accordion: each h3 question + p answer pair becomes a
+ * <details> disclosure. Only the rendered HTML changes; faqOf() reads the
+ * source fragment, and the answers stay in the DOM (closed, not removed), so
+ * the FAQPage schema still matches visible content.
+ */
+export function faqAccordion(html: string): string {
+  const start = html.search(/<h2>Frequently asked questions<\/h2>/);
+  if (start < 0) return html;
+  const rest = html.slice(start + 1);
+  const endRel = rest.search(/<h2>|<\/div>\s*<section class="cta"/);
+  const end = endRel < 0 ? html.length : start + 1 + endRel;
+  const section = html
+    .slice(start, end)
+    .replace(
+      /<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g,
+      '<details class="faq"><summary><h3>$1</h3></summary><p>$2</p></details>',
+    );
+  return html.slice(0, start) + section + html.slice(end);
+}
+
 /** Breadcrumb trail from the visible crumbs nav. */
 export function crumbsOf(html: string, page: SitePage): { name: string; url: string }[] {
   const nav = html.match(/<nav class="crumbs"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
@@ -222,19 +248,22 @@ export function organizationNode(): JsonLdNode {
     foundingDate: site.foundingDate,
     areaServed: { "@type": "Country", name: "India" },
     knowsAbout: [
-      "Business transformation",
-      "Operational excellence",
+      "Profitable growth",
+      "Market expansion",
       "Commercial excellence",
-      "New business development",
-      "Demand generation",
+      "Brand growth",
+      "Operational excellence",
+      "Margin improvement",
       "Corporate governance",
       "Investment readiness",
-      "Private equity readiness",
-      "Supplier development",
+      "Growth capital",
+      "Post-investment value creation",
+      "Portfolio value creation",
+      "Digital growth and AI enablement",
     ],
     audience: {
       "@type": "BusinessAudience",
-      audienceType: "Promoter-led manufacturers with revenue of INR 150-500 crore",
+      audienceType: "Promoter-led businesses (primarily INR 150-500 crore revenue), investors and PE/VC funds",
     },
     parentOrganization: {
       "@type": "Organization",
@@ -248,7 +277,7 @@ export function organizationNode(): JsonLdNode {
       contactType: "enquiries",
       email: site.email,
       availableLanguage: ["English", "Hindi"],
-      url: abs("/enquiry/"),
+      url: abs("/contact/"),
     },
   };
 }

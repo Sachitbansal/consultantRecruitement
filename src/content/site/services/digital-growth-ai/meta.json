@@ -1,0 +1,44 @@
+{
+  "title": "Digital Growth and AI Enablement | GOP",
+  "description": "GOP finds practical uses of digital tools, automation and AI that improve growth, productivity and decisions, piloted on real data and measured.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/digital-growth-ai/#service",
+      "name": "Digital Growth and AI Enablement",
+      "serviceType": "Digital Growth and AI Enablement",
+      "description": "In the decisions and hand-offs that cost the business money every week: quoting, lead follow-up, receivable chasing, planning, exception alerts and month-end reporting. GOP starts with the business objective, pilots a practical solution on real data and keeps it only if it measurably improves the work.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/digital-growth-ai/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/digital-growth-ai/#page",
+      "url": "https://gop.sbssdigital.com/services/digital-growth-ai/",
+      "name": "Digital Growth and AI Enablement | GOP",
+      "description": "GOP finds practical uses of digital tools, automation and AI that improve growth, productivity and decisions, piloted on real data and measured.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/digital-growth-ai/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-24"
+    }
+  ]
+}

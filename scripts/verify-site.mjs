@@ -288,10 +288,10 @@ for (const [route, file] of [...pages].sort()) {
   if (!noindex) {
     const n = words(visible);
     const kind =
-      route === "/" ? "home" : route.startsWith("/what-we-do/") && route !== "/what-we-do/" ? "lever"
+      route === "/" ? "home" : route.startsWith("/services/") ? "lever"
       : route.startsWith("/insights/") && route !== "/insights/" ? "article" : "hub";
     const min = { lever: 900, article: 650, home: 600 }[kind] ??
-      (["/about/", "/results/"].includes(route) ? 600 : 0);
+      (["/about/", "/experience-outcomes/"].includes(route) ? 600 : 0);
     const max = { lever: 1100, article: 1000 }[kind];
     if (min && n < min) warn(where, `${n} words (target ${min}${max ? `-${max}` : "+"})`);
     if (max && n > max + 150) warn(where, `${n} words (target ${min}-${max})`);
@@ -316,7 +316,7 @@ for (const p of ["/admin", "/apply", "/api"])
 for (const s of ["sitemap.xml", "image-sitemap.xml"])
   if (!robotsTxt.includes(`Sitemap: ${ORIGIN}/${s}`)) err("robots.txt", `missing Sitemap line for ${s}`);
 for (const u of sitemapUrls)
-  if (/\/(admin|apply|api)(\/|$)/.test(u) || u.includes("/enquiry/thanks/")) err("sitemap.xml", `lists non-public URL ${u}`);
+  if (/\/(admin|apply|api)(\/|$)/.test(u) || u.includes("/contact/thanks/")) err("sitemap.xml", `lists non-public URL ${u}`);
 if (!fs.existsSync(path.join(APP_OUT, "llms.txt.body"))) err("llms.txt", "not generated");
 if (![...publicFiles].some((f) => /^\/[0-9a-f]{32}\.txt$/.test(f))) err("public", "IndexNow key file missing");
 

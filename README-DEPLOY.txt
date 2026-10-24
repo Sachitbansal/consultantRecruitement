@@ -15,6 +15,7 @@ send.php; their jobs are done by the pieces listed below.
   Security headers, asset cache  next.config.mjs headers()
   gzip                           Next.js compresses responses itself
   Custom 404 (noindex)           src/app/(site)/not-found.tsx
+  Old URLs -> new URLs (308)     next.config.mjs MOVED (renamed 24 Oct 2026)
   Enquiry form handler           /api/contact (SMTP, honeypot, rate limit,
                                  origin check, server-side validation)
   robots.txt / sitemaps / llms   src/app/robots.ts, sitemap.ts,
@@ -50,8 +51,10 @@ On the server, in ~/workarea/bansal/consultantRecruitement:
   d) Smoke test:
        https://gop.sbssdigital.com/             home
        https://gop.sbssdigital.com/about        must redirect to /about/
-       https://gop.sbssdigital.com/team/
-       https://gop.sbssdigital.com/enquiry/     send one real test enquiry and
+       https://gop.sbssdigital.com/team/        must redirect to /our-people/
+       https://gop.sbssdigital.com/business-promoters/, /investors/,
+       /pe-vc-funds/, /services/growth-capital-value-creation/
+       https://gop.sbssdigital.com/contact/     send one real test enquiry and
                                                 confirm it arrives at gop@
        https://gop.sbssdigital.com/apply        intake form still loads
        https://gop.sbssdigital.com/admin        still redirects to login
@@ -82,11 +85,12 @@ exists, so there is nothing to redirect.
   5. Use the SAME one-line description everywhere: on the LinkedIn showcase
      page, on sbssdigital.com and in any directory listing, each linking back
      to gop.sbssdigital.com. It is `site.about` in src/lib/gop-content.ts:
-       "GOP (Growth Operating Partners) is the growth consulting and strategy
-        execution vertical of SBSSdigital. Several cohort mates from the IIM
-        Calcutta Executive Programme have come together to build and scale
-        GOP, an operator-led collective of senior professionals with 100+
-        years of combined hands-on experience."
+       "GOP is an operator-led growth and value-creation partner that helps
+        promoter-led businesses scale profitably, become investment-ready,
+        access growth capital, and deliver measurable returns after
+        investment."
+     The SBSSdigital / IIM Calcutta line is `site.origin`; use it as the
+     second sentence where there is room.
 
 
 3. TEAM PHOTOS (placeholders today)
@@ -97,7 +101,7 @@ are 640x640 navy placeholders with initials. To swap in real photos:
   1. Crop each photo square and export WebP at 640x640, ideally under 80 KB
      (e.g. `cwebp -q 82 -resize 640 640 in.jpg -o team-atul-saxena.webp`).
   2. Overwrite the two files with the SAME names. Do not rename them.
-  3. In src/content/site/team/page.html: delete the two
+  3. In src/content/site/our-people/page.html: delete the two
      "<figcaption>Illustrative portrait</figcaption>" captions and the
      "Portraits above are placeholders..." note, and drop "(placeholder
      portrait)" from both alt texts.
@@ -109,7 +113,7 @@ force-refresh.
 
 4. EDITING CONTENT
 ------------------
-Every marketing page except /enquiry/ is an HTML fragment plus a meta file:
+Every marketing page except /contact/ is an HTML fragment plus a meta file:
   src/content/site/<path>/page.html    what appears inside <main>
   src/content/site/<path>/meta.json    title, meta description, OG image,
                                        page-specific JSON-LD, category
@@ -164,6 +168,39 @@ that answers that question in its first two lines, and ping IndexNow.
 
 6. NEEDS HUMAN REVIEW BEFORE OR SOON AFTER LAUNCH
 -------------------------------------------------
+Repositioning of 24 October 2026 (three audiences, six capabilities):
+  - Capital wording. The site says GOP does not invest its own money, and
+    that it helps a business build the pitch deck, take the pitch to
+    mid-market PE and VC investors and work through the raise, within an
+    agreed mandate, with no guarantee. Have a securities lawyer confirm
+    this activity does not need a SEBI registration (for example as a
+    merchant banker or investment adviser) and that "not a merchant
+    banker" on /about/ and /disclaimer/ is accurate.
+  - /investors/ offers to tell investors about businesses that have
+    mandated GOP to approach investors. Confirm GOP wants this.
+  - /privacy-policy/ and /disclaimer/ are DRAFTS, noindex and out of the
+    sitemaps (`"noindex": true` in their meta.json). Before removing that
+    flag, have a lawyer add the legal entity name and address and confirm:
+    no cookies or analytics on public pages, server access logs kept for a
+    limited period (state the period), enquiry emails kept "as long as
+    needed", the server being "managed for GOP", and the rights section.
+  - Results are now labelled "prior-career work of GOP practice leads,
+    before GOP, not GOP client results" everywhere (pages, captions,
+    footer). /experience-outcomes/ uses a context / intervention / outcome /
+    attribution card per result. Missing for full attribution: which
+    named person did each, in what role, and the measurement period.
+  - /our-people/: the unnamed collective is now described by capability
+    only (no "Partner" titles, no employer or certification clues). The
+    institutions line (VJTI Mumbai, NMIMS, ISB Hyderabad) is unattributed;
+    confirm or remove.
+  - "GOP is not affiliated with, endorsed by or sponsored by IIM Calcutta"
+    now appears on /about/ and /our-people/.
+  - The free diagnostic conversation is still offered; the "reply within
+    two business days" promise was removed everywhere, including the
+    automatic acknowledgement email.
+  - Five hypothetical scenarios were added or rewritten for the six
+    service pages (growth capital and digital/AI are new).
+
 Legal or expert review:
   - /insights/how-to-prepare-for-sme-ipo/  merchant banker or legal review
   - /insights/governance-and-mis-for-mid-size-manufacturers/  company
@@ -203,7 +240,7 @@ Team page: Mahaveer Upadhyaya's bio names former employers (Apollo Tyres,
 Wipro, Vodafone Essar and others). These are his past roles, not GOP
 clients. Confirm he is happy for them to be published.
 
-Illustrative scenarios: every lever page has one labelled "Hypothetical, for
+Illustrative scenarios: every service page has one labelled "Hypothetical, for
 illustration only. Not a client case." Check that none resembles a real
 client closely enough to be recognised.
 

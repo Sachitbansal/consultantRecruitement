@@ -1,0 +1,141 @@
+{
+  "title": "Business Growth Glossary: Key Terms Explained | GOP",
+  "description": "Plain-language definitions of EBITDA, working capital, investment readiness, value-creation plans, due diligence and other growth terms.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://gop.sbssdigital.com/glossary/#terms",
+      "name": "GOP business growth glossary",
+      "url": "https://gop.sbssdigital.com/glossary/",
+      "hasDefinedTerm": [
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#profitable-growth",
+          "name": "Profitable Growth",
+          "description": "Revenue growth that also raises profit, cash and the quality of earnings, rather than growth bought with deeper discounts, longer credit or rising cost.",
+          "url": "https://gop.sbssdigital.com/glossary/#profitable-growth"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#ebitda",
+          "name": "EBITDA",
+          "description": "Earnings before interest, tax, depreciation and amortisation: operating profit before financing costs and non-cash charges.",
+          "url": "https://gop.sbssdigital.com/glossary/#ebitda"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#working-capital",
+          "name": "Working Capital",
+          "description": "The money tied up in running the business day to day: inventory plus receivables minus payables.",
+          "url": "https://gop.sbssdigital.com/glossary/#working-capital"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#commercial-excellence",
+          "name": "Commercial Excellence",
+          "description": "The discipline of earning the most from the business you already have: pricing, discount control, key-account management and an effective sales process.",
+          "url": "https://gop.sbssdigital.com/glossary/#commercial-excellence"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#customer-acquisition-cost",
+          "name": "Customer Acquisition Cost",
+          "description": "The total sales and marketing spend needed to win one new customer, over a defined period.",
+          "url": "https://gop.sbssdigital.com/glossary/#customer-acquisition-cost"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#customer-lifetime-value",
+          "name": "Customer Lifetime Value",
+          "description": "The total margin a customer is expected to contribute over the whole relationship, not just the first order.",
+          "url": "https://gop.sbssdigital.com/glossary/#customer-lifetime-value"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#gross-margin",
+          "name": "Gross Margin",
+          "description": "Revenue minus the direct cost of the goods sold, as a share of revenue.",
+          "url": "https://gop.sbssdigital.com/glossary/#gross-margin"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#operating-leverage",
+          "name": "Operating Leverage",
+          "description": "The degree to which profit grows faster than revenue because part of the cost base is fixed.",
+          "url": "https://gop.sbssdigital.com/glossary/#operating-leverage"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#investment-readiness",
+          "name": "Investment Readiness",
+          "description": "The state in which an outside investor can trust a business's numbers, people, governance and plan without relying on the promoter's memory.",
+          "url": "https://gop.sbssdigital.com/glossary/#investment-readiness"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#value-creation-plan",
+          "name": "Value-Creation Plan",
+          "description": "A prioritised, owned and measured set of initiatives that turns an investment thesis into operating results.",
+          "url": "https://gop.sbssdigital.com/glossary/#value-creation-plan"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#portfolio-company",
+          "name": "Portfolio Company",
+          "description": "A business in which a private equity or venture capital fund has invested.",
+          "url": "https://gop.sbssdigital.com/glossary/#portfolio-company"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#due-diligence",
+          "name": "Due Diligence",
+          "description": "The investigation an investor or acquirer carries out before committing capital, covering financial, commercial, operational, legal and tax matters.",
+          "url": "https://gop.sbssdigital.com/glossary/#due-diligence"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#capital-allocation",
+          "name": "Capital Allocation",
+          "description": "How a business decides where to spend its money: capacity, working capital, new markets, debt reduction or returns to owners.",
+          "url": "https://gop.sbssdigital.com/glossary/#capital-allocation"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#governance",
+          "name": "Governance",
+          "description": "The structures and routines that decide who can decide what: board calendar, committees, delegation of authority and approval limits.",
+          "url": "https://gop.sbssdigital.com/glossary/#governance"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#management-reporting",
+          "name": "Management Reporting",
+          "description": "The regular pack of operating and financial information leadership uses to run the business, often called MIS.",
+          "url": "https://gop.sbssdigital.com/glossary/#management-reporting"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#market-expansion",
+          "name": "Market Expansion",
+          "description": "Growing into new customer segments, products, categories, channels or geographies.",
+          "url": "https://gop.sbssdigital.com/glossary/#market-expansion"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#sales-productivity",
+          "name": "Sales Productivity",
+          "description": "The revenue or margin produced per unit of sales effort, such as per salesperson, per call or per rupee of sales cost.",
+          "url": "https://gop.sbssdigital.com/glossary/#sales-productivity"
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://gop.sbssdigital.com/glossary/#post-investment-value-creation",
+          "name": "Post-Investment Value Creation",
+          "description": "The work done after capital arrives to deliver the growth, margin and capability changes the investment assumed.",
+          "url": "https://gop.sbssdigital.com/glossary/#post-investment-value-creation"
+        }
+      ]
+    }
+  ]
+}

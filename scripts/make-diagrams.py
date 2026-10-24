@@ -276,7 +276,33 @@ def ninety_day():
     save(img, "ninety-day-transformation-plan-manufacturer.webp", w, h)
 
 
+def levers():
+    """The five value-creation levers, with digital and AI under all of them."""
+    w, h = 1400, 620
+    img, d = canvas(w, h)
+    levers_ = [
+        ("1", ["Profitable Growth", "and Market", "Expansion"]),
+        ("2", ["Commercial", "Excellence and", "Brand Growth"]),
+        ("3", ["Operational", "Excellence and", "Margin Improvement"]),
+        ("4", ["Governance and", "Investment", "Readiness"]),
+        ("5", ["Growth Capital and", "Post-Investment", "Value Creation"]),
+    ]
+    center_text(d, (0, 34, w, 84), ["Five levers. One integrated growth agenda."], font(34, True), NAVY)
+    x, cw, gap = 70, 236, 16
+    for num, lines in levers_:
+        rect(d, (x, 120, x + cw, 400), NAVY, radius=8)
+        d.ellipse([(x + cw / 2 - 26) * S, 146 * S, (x + cw / 2 + 26) * S, 198 * S], fill=WHITE)
+        center_text(d, (x, 146, x + cw, 198), [num], font(28, True), NAVY)
+        center_text(d, (x + 8, 220, x + cw - 8, 380), lines, font(25, True), WHITE, gap=8)
+        x += cw + gap
+    rect(d, (70, 424, w - 70, 500), GREY, radius=8)
+    center_text(d, (70, 424, w - 70, 500), ["Digital Growth and AI Enablement strengthens every lever"], font(27, True), WHITE)
+    center_text(d, (0, 528, w, 580), ["Investment se pehle bhi. Investment ke baad bhi."], font(26), TEXT)
+    save(img, "five-value-creation-levers.webp", w, h)
+
+
 JOBS = {
+    "levers": levers,
     "comparison": comparison,
     "engagement": engagement,
     "costing": costing,

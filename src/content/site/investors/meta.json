@@ -1,0 +1,21 @@
+{
+  "title": "Business Growth and Investment Opportunities | GOP",
+  "description": "GOP's operator-led view of business growth, operating quality and investment readiness, for family offices, HNIs and strategic investors.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/investors/#page",
+      "url": "https://gop.sbssdigital.com/investors/",
+      "name": "For Investors",
+      "description": "GOP's operator-led view of business growth, operating quality and investment readiness, for family offices, HNIs and strategic investors.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "inLanguage": "en-IN"
+    }
+  ]
+}

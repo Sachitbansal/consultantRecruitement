@@ -9,7 +9,7 @@ import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 
 /**
- * Contact enquiry handler for the landing page.
+ * Contact enquiry handler for the /contact/ form.
  *
  * This is a port of the old php/contact.php that ran on the cPanel shared host
  * (sbssdigital.com/gop). The site now runs on a Node server behind nginx, so
@@ -78,9 +78,23 @@ const enquirySchema = z.object({
     .regex(/\p{L}/u, "Please enter a real name"),
   company: z
     .string()
-    .min(1, "Please enter your company name")
-    .min(2, "That company name looks too short")
-    .max(160, "That company name is too long"),
+    .min(1, "Please enter your organisation")
+    .min(2, "That organisation name looks too short")
+    .max(160, "That organisation name is too long"),
+  role: z.string().max(120, "That role is too long"),
+  // Whitelisted, like revenue and topic below.
+  persona: z
+    .string()
+    .refine(
+      (v) => contact.personas.some((p) => p.value === v),
+      "Please tell us who you are",
+    ),
+  topic: z
+    .string()
+    .refine(
+      (v) => (contact.topics as string[]).includes(v),
+      "Please choose what you would like to discuss",
+    ),
   email: z
     .string()
     .min(1, "Please enter your email address")
@@ -103,6 +117,7 @@ const enquirySchema = z.object({
       "Please choose one of the listed ranges",
     ),
   message: z.string().max(5000, "Please keep it under 5000 characters"),
+  consent: z.literal("yes", "Please confirm you have read the privacy policy"),
   // Honeypot. Named 'website' rather than 'company', which is a real field.
   website: z.string(),
 });
@@ -185,10 +200,14 @@ export async function POST(req: NextRequest) {
   const raw = {
     name: clean(body.name),
     company: clean(body.company),
+    role: clean(body.role),
     email: clean(body.email),
     phone: clean(body.phone),
+    persona: clean(body.persona),
+    topic: clean(body.topic),
     revenue: clean(body.revenue),
     message: clean(body.message),
+    consent: clean(body.consent),
     website: clean(body.website),
   };
 
@@ -230,12 +249,19 @@ export async function POST(req: NextRequest) {
   const safeCompany = headerSafe(raw.company);
   const safeEmail = headerSafe(raw.email);
 
+  const personaLabel =
+    contact.personas.find((p) => p.value === raw.persona)?.label ?? raw.persona;
+
   const rows: Record<string, string> = {
+    "I am a": personaLabel,
+    Topic: headerSafe(raw.topic),
     Name: safeName,
-    Company: safeCompany,
+    Organisation: safeCompany,
+    Role: raw.role !== "" ? headerSafe(raw.role) : "—",
     Email: safeEmail,
     Phone: raw.phone !== "" ? headerSafe(raw.phone) : "—",
     Revenue: raw.revenue !== "" ? headerSafe(raw.revenue) : "Not specified",
+    "Privacy notice": "Acknowledged",
     IP: ip,
     Received: new Date().toISOString(),
   };
@@ -278,12 +304,12 @@ export async function POST(req: NextRequest) {
       from: { name: FROM_NAME, address: FROM_EMAIL },
       to: { name: TO_NAME, address: TO_EMAIL },
       replyTo: { name: safeName, address: safeEmail },
-      subject: `[GOP enquiry] ${safeCompany} — ${safeName}`,
+      subject: `[GOP enquiry: ${personaLabel}] ${safeCompany} — ${safeName}`,
       text: `${textRows}\n\n${raw.message !== "" ? raw.message : "No message provided."}`,
       html:
         `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;` +
         `font-size:15px;color:#1a2233;line-height:1.6">` +
-        `<h2 style="margin:0 0 16px;font-size:17px;color:#0b1f40">New diagnostic call request</h2>` +
+        `<h2 style="margin:0 0 16px;font-size:17px;color:#0b1f40">New enquiry from the website</h2>` +
         `<table style="border-collapse:collapse;margin-bottom:20px">${htmlRows}</table>` +
         `${messageBlock}</div>`,
     });
@@ -323,21 +349,21 @@ export async function POST(req: NextRequest) {
         subject: "We have your enquiry — Growth Operating Partners",
         text:
           `Hello ${safeName},\n\n` +
-          `Thanks for reaching out to Growth Operating Partners. Your enquiry has reached our team and is being reviewed.\n\n` +
-          `We will be in touch within two business days to schedule your free diagnostic call - no pitch, no obligation.\n\n` +
-          `Operator-led Growth. Investor-ready Outcomes.\n` +
+          `Thank you for contacting Growth Operating Partners. Your enquiry has been received.\n\n` +
+          `The team will review the information and respond if there is a suitable next step.\n\n` +
+          `Investment se pehle bhi. Investment ke baad bhi.\n` +
           `This is an automated confirmation - no need to reply to it.`,
         html:
           `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;` +
           `font-size:15px;color:#1a2233;line-height:1.6;max-width:560px">` +
           `<p>Hello ${escapedName},</p>` +
-          `<p>Thanks for reaching out to Growth Operating Partners. Your enquiry has ` +
-          `reached our team and is being reviewed.</p>` +
-          `<p>We will be in touch within two business days to schedule your free ` +
-          `diagnostic call — no pitch, no obligation.</p>` +
+          `<p>Thank you for contacting Growth Operating Partners. Your enquiry has ` +
+          `been received.</p>` +
+          `<p>The team will review the information and respond if there is a ` +
+          `suitable next step.</p>` +
           `<p style="margin-top:28px;padding-top:16px;border-top:1px solid #dce0e6;` +
           `color:#5b6472;font-size:13px">` +
-          `Operator-led Growth. Investor-ready Outcomes.<br>` +
+          `Investment se pehle bhi. Investment ke baad bhi.<br>` +
           `This is an automated confirmation — no need to reply to it.</p>` +
           `</div>`,
       });

@@ -1,0 +1,44 @@
+{
+  "title": "Operational Excellence and Margin Improvement | GOP",
+  "description": "GOP raises capacity and productivity, lowers cost per unit and tightens working capital, often without new floor space, measured against a baseline.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/operational-excellence/#service",
+      "name": "Operational Excellence and Margin Improvement",
+      "serviceType": "Operational Excellence and Margin Improvement",
+      "description": "GOP works on the shop floor and in the supply chain to raise output, cut waste and lower cost per unit, often within existing space and assets. The work covers flow, changeover, layout, procurement, working capital and operating reviews, and is measured in capacity, productivity and landed cost against a documented baseline.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/operational-excellence/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/operational-excellence/#page",
+      "url": "https://gop.sbssdigital.com/services/operational-excellence/",
+      "name": "Operational Excellence and Margin Improvement | GOP",
+      "description": "GOP raises capacity and productivity, lowers cost per unit and tightens working capital, often without new floor space, measured against a baseline.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/operational-excellence/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-23"
+    }
+  ]
+}

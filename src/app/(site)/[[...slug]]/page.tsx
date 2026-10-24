@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import SiteFooter from "@/components/site/SiteFooter";
 import SiteHeader from "@/components/site/SiteHeader";
 import {
+  faqAccordion,
   getAllPages,
   getPage,
   jsonLdFor,
@@ -30,12 +31,13 @@ export function generateMetadata({ params }: Props): Metadata {
     path: page.path,
     ogImage: page.meta.ogImage,
     type: page.kind === "article" ? "article" : "website",
+    noindex: page.meta.noindex,
   });
 }
 
 // The pre-split site was a single page with in-page sections. Fragments never
 // reach the server, so those old links are forwarded here, client-side.
-const legacyAnchors = `(function(){var m={"#contact":"/enquiry/","#what-we-do":"/what-we-do/","#how-we-work":"/how-we-work/","#who-we-work-with":"/who-we-help/"};var t=m[location.hash];if(t)location.replace(t);})();`;
+const legacyAnchors = `(function(){var m={"#contact":"/contact/","#what-we-do":"/what-we-do/","#how-we-work":"/our-approach/","#who-we-work-with":"/business-promoters/"};var t=m[location.hash];if(t)location.replace(t);})();`;
 
 export default function SitePage({ params }: Props) {
   const page = getPage(params.slug);
@@ -47,7 +49,7 @@ export default function SitePage({ params }: Props) {
       {page.kind === "home" && (
         <script dangerouslySetInnerHTML={{ __html: legacyAnchors }} />
       )}
-      <main id="main" dangerouslySetInnerHTML={{ __html: page.html }} />
+      <main id="main" dangerouslySetInnerHTML={{ __html: faqAccordion(page.html) }} />
       <SiteFooter />
       <script
         type="application/ld+json"

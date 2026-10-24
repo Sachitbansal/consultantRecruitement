@@ -1,0 +1,44 @@
+{
+  "title": "Growth Capital and Post-Investment Value Creation | GOP",
+  "description": "GOP helps promoter-led businesses build the investment case, pitch to mid-market PE and VC investors, and deliver the value-creation plan after investment.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/growth-capital-value-creation/#service",
+      "name": "Growth Capital and Post-Investment Value Creation",
+      "serviceType": "Growth Capital and Post-Investment Value Creation",
+      "description": "GOP does not invest its own money. It helps a promoter-led business build the case for capital, prepare the pitch deck and investor information, take the pitch to suitable mid-market PE and VC investors and work through the raise. After investment, GOP helps leadership turn the investment thesis into a plan and deliver it.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/growth-capital-value-creation/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/growth-capital-value-creation/#page",
+      "url": "https://gop.sbssdigital.com/services/growth-capital-value-creation/",
+      "name": "Growth Capital and Post-Investment Value Creation | GOP",
+      "description": "GOP helps promoter-led businesses build the investment case, pitch to mid-market PE and VC investors, and deliver the value-creation plan after investment.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/growth-capital-value-creation/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-24"
+    }
+  ]
+}

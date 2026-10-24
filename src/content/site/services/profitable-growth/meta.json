@@ -1,0 +1,44 @@
+{
+  "title": "Profitable Growth and Market Expansion | GOP",
+  "description": "GOP helps promoter-led businesses find profitable growth: market and segment prioritisation, new categories and channels, and a new-customer engine.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "Service",
+      "@id": "https://gop.sbssdigital.com/services/profitable-growth/#service",
+      "name": "Profitable Growth and Market Expansion",
+      "serviceType": "Profitable Growth and Market Expansion",
+      "description": "GOP assesses where growth can come from, including existing customers, new segments, products, channels and geographies, and ranks each option by commercial attractiveness and execution feasibility. It then builds a structured engine to win new customers, including OEM and export accounts, so new business no longer depends on the promoter's network.",
+      "provider": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Promoter-led businesses, primarily INR 150-500 crore revenue, and their investors"
+      },
+      "url": "https://gop.sbssdigital.com/services/profitable-growth/",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/what-we-do/#service"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/services/profitable-growth/#page",
+      "url": "https://gop.sbssdigital.com/services/profitable-growth/",
+      "name": "Profitable Growth and Market Expansion | GOP",
+      "description": "GOP helps promoter-led businesses find profitable growth: market and segment prioritisation, new categories and channels, and a new-customer engine.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/services/profitable-growth/#service"
+      },
+      "inLanguage": "en-IN",
+      "datePublished": "2026-10-23"
+    }
+  ]
+}

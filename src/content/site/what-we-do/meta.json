@@ -1,13 +1,13 @@
 {
-  "title": "What GOP Does: Five Levers for Manufacturers | GOP",
-  "description": "GOP's Five Levers: operational excellence, commercial excellence, new business, demand generation and investment readiness for manufacturers.",
+  "title": "What GOP Does: Growth, Readiness and Value Creation | GOP",
+  "description": "GOP's capabilities: profitable growth, commercial and operational excellence, investment readiness, growth capital and digital and AI enablement.",
   "ogImage": "/assets/img/og-gop-operator-led-growth.png",
   "nodes": [
     {
       "@type": "Service",
       "@id": "https://gop.sbssdigital.com/what-we-do/#service",
-      "name": "Business transformation for promoter-led manufacturers",
-      "description": "Five levers delivered by operator-led teams: operational excellence, commercial excellence, new business development, demand generation, and governance and investment readiness.",
+      "name": "GOP value-creation levers",
+      "serviceType": "Business growth and value-creation consulting",
       "provider": {
         "@id": "https://gop.sbssdigital.com/#organization"
       },
@@ -15,48 +15,45 @@
         "@type": "Country",
         "name": "India"
       },
+      "url": "https://gop.sbssdigital.com/what-we-do/",
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "GOP Five Levers",
+        "name": "GOP capabilities",
         "itemListElement": [
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Service",
-              "name": "Operational Excellence & Cost Optimization",
-              "url": "https://gop.sbssdigital.com/what-we-do/operational-excellence/"
+              "@id": "https://gop.sbssdigital.com/services/profitable-growth/#service"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Service",
-              "name": "Commercial Excellence & Value Capturing",
-              "url": "https://gop.sbssdigital.com/what-we-do/commercial-excellence/"
+              "@id": "https://gop.sbssdigital.com/services/commercial-excellence/#service"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Service",
-              "name": "New Business Development",
-              "url": "https://gop.sbssdigital.com/what-we-do/new-business-development/"
+              "@id": "https://gop.sbssdigital.com/services/operational-excellence/#service"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Service",
-              "name": "Demand Generation & Brand Building",
-              "url": "https://gop.sbssdigital.com/what-we-do/demand-generation/"
+              "@id": "https://gop.sbssdigital.com/services/investment-readiness/#service"
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
-              "@type": "Service",
-              "name": "Strengthening Governance & Investment Readiness",
-              "url": "https://gop.sbssdigital.com/what-we-do/governance-investment-readiness/"
+              "@id": "https://gop.sbssdigital.com/services/growth-capital-value-creation/#service"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://gop.sbssdigital.com/services/digital-growth-ai/#service"
             }
           }
         ]

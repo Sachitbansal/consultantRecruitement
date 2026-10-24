@@ -1,0 +1,21 @@
+{
+  "title": "Portfolio Value Creation and Operating Support | GOP",
+  "description": "Operator-led support for PE/VC portfolio companies: growth, commercial excellence, operational improvement, governance and value-creation plans.",
+  "ogImage": "/assets/img/og-gop-operator-led-growth.png",
+  "nodes": [
+    {
+      "@type": "WebPage",
+      "@id": "https://gop.sbssdigital.com/pe-vc-funds/#page",
+      "url": "https://gop.sbssdigital.com/pe-vc-funds/",
+      "name": "For PE/VC Funds",
+      "description": "Operator-led support for PE/VC portfolio companies: growth, commercial excellence, operational improvement, governance and value-creation plans.",
+      "isPartOf": {
+        "@id": "https://gop.sbssdigital.com/#website"
+      },
+      "about": {
+        "@id": "https://gop.sbssdigital.com/#organization"
+      },
+      "inLanguage": "en-IN"
+    }
+  ]
+}

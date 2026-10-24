@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { contact } from "@/lib/gop-content";
 
 type FieldErrors = Record<string, string>;
@@ -39,7 +39,9 @@ async function readJson(response: Response): Promise<ContactResponse | null> {
   }
 }
 
-/** Mirrors the server rules in contact.php so mistakes surface before a round trip. */
+const PERSONAS = contact.personas.map((p) => p.value);
+
+/** Mirrors the server rules in /api/contact so mistakes surface before a round trip. */
 function validate(values: Record<string, string>): FieldErrors {
   const errors: FieldErrors = {};
 
@@ -49,8 +51,15 @@ function validate(values: Record<string, string>): FieldErrors {
   else if (!/\p{L}/u.test(name)) errors.name = "Please enter a real name";
 
   const company = values.company.trim();
-  if (!company) errors.company = "Please enter your company name";
-  else if (company.length < 2) errors.company = "That company name looks too short";
+  if (!company) errors.company = "Please enter your organisation";
+  else if (company.length < 2) errors.company = "That organisation name looks too short";
+
+  if (values.role.trim().length > 120) errors.role = "That role is too long";
+
+  if (!PERSONAS.includes(values.persona)) errors.persona = "Please tell us who you are";
+
+  if (!(contact.topics as string[]).includes(values.topic))
+    errors.topic = "Please choose what you would like to discuss";
 
   const email = values.email.trim();
   if (!email) errors.email = "Please enter your email address";
@@ -65,6 +74,9 @@ function validate(values: Record<string, string>): FieldErrors {
   if (values.message.trim().length > 5000)
     errors.message = "Please keep it under 5000 characters";
 
+  if (values.consent !== "yes")
+    errors.consent = "Please confirm you have read the privacy policy";
+
   return errors;
 }
 
@@ -75,6 +87,14 @@ export default function ContactForm() {
   const [blocked, setBlocked] = useState(false);
   const [sending, setSending] = useState(false);
   const router = useRouter();
+  const personaRef = useRef<HTMLSelectElement>(null);
+
+  // Audience CTAs link here as /contact/?i=investor and so on; preselect it.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("i");
+    if (wanted && PERSONAS.includes(wanted) && personaRef.current)
+      personaRef.current.value = wanted;
+  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -84,10 +104,14 @@ export default function ContactForm() {
     const values = {
       name: data.name ?? "",
       company: data.company ?? "",
+      role: data.role ?? "",
       email: data.email ?? "",
       phone: data.phone ?? "",
+      persona: data.persona ?? "",
+      topic: data.topic ?? "",
       revenue: data.revenue ?? "",
       message: data.message ?? "",
+      consent: data.consent ?? "",
       website: data.website ?? "", // honeypot
     };
 
@@ -95,7 +119,11 @@ export default function ContactForm() {
     setErrors(found);
     setFormError("");
     if (Object.keys(found).length) {
-      form.querySelector<HTMLElement>('[data-invalid="true"] input, [data-invalid="true"] select')?.focus();
+      form
+        .querySelector<HTMLElement>(
+          '[data-invalid="true"] input, [data-invalid="true"] select, [data-invalid="true"] textarea',
+        )
+        ?.focus();
       return;
     }
 
@@ -126,7 +154,7 @@ export default function ContactForm() {
       // analytics, so success always lands there rather than swapping in a
       // message.
       form.reset();
-      router.push("/enquiry/thanks/");
+      router.push("/contact/thanks/");
       return;
     } catch {
       setBlocked(true);
@@ -175,12 +203,20 @@ export default function ContactForm() {
 
       <div className="form-row">
         <div {...field("name")}>
-          <label htmlFor={`${uid}-name`}>Full Name</label>
+          <label htmlFor={`${uid}-name`}>Full name</label>
           <input {...control("name")} type="text" autoComplete="name" required />
           {errorFor("name")}
         </div>
+        <div {...field("email")}>
+          <label htmlFor={`${uid}-email`}>Business email</label>
+          <input {...control("email")} type="email" autoComplete="email" required />
+          {errorFor("email")}
+        </div>
+      </div>
+
+      <div className="form-row">
         <div {...field("company")}>
-          <label htmlFor={`${uid}-company`}>Company Name</label>
+          <label htmlFor={`${uid}-company`}>Organisation</label>
           <input
             {...control("company")}
             type="text"
@@ -189,13 +225,27 @@ export default function ContactForm() {
           />
           {errorFor("company")}
         </div>
+        <div {...field("role")}>
+          <label htmlFor={`${uid}-role`}>
+            Role <span className="optional">(optional)</span>
+          </label>
+          <input {...control("role")} type="text" autoComplete="organization-title" />
+          {errorFor("role")}
+        </div>
       </div>
 
       <div className="form-row">
-        <div {...field("email")}>
-          <label htmlFor={`${uid}-email`}>Email</label>
-          <input {...control("email")} type="email" autoComplete="email" required />
-          {errorFor("email")}
+        <div {...field("persona")}>
+          <label htmlFor={`${uid}-persona`}>I am a</label>
+          <select {...control("persona")} ref={personaRef} defaultValue="" required>
+            <option value="">Select one</option>
+            {contact.personas.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errorFor("persona")}
         </div>
         <div {...field("phone")}>
           <label htmlFor={`${uid}-phone`}>
@@ -206,27 +256,50 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <div {...field("revenue")}>
-        <label htmlFor={`${uid}-revenue`}>
-          Annual Revenue Range <span className="optional">(optional)</span>
-        </label>
-        <select {...control("revenue")} defaultValue="">
-          <option value="">Select a range</option>
-          {contact.revenueOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        {errorFor("revenue")}
+      <div className="form-row">
+        <div {...field("topic")}>
+          <label htmlFor={`${uid}-topic`}>What would you like to discuss?</label>
+          <select {...control("topic")} defaultValue="" required>
+            <option value="">Select a topic</option>
+            {contact.topics.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errorFor("topic")}
+        </div>
+        <div {...field("revenue")}>
+          <label htmlFor={`${uid}-revenue`}>
+            Business revenue band <span className="optional">(optional)</span>
+          </label>
+          <select {...control("revenue")} defaultValue="">
+            <option value="">Select a range</option>
+            {contact.revenueOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errorFor("revenue")}
+        </div>
       </div>
 
       <div {...field("message")}>
         <label htmlFor={`${uid}-message`}>
-          What&rsquo;s on your mind <span className="optional">(optional)</span>
+          Additional context <span className="optional">(optional)</span>
         </label>
         <textarea {...control("message")} rows={4} />
         {errorFor("message")}
+      </div>
+
+      <div {...field("consent")}>
+        <label className="check" htmlFor={`${uid}-consent`}>
+          <input {...control("consent")} type="checkbox" value="yes" required />{" "}
+          I have read the <a href="/privacy-policy/">privacy policy</a> and agree to
+          GOP using these details to respond to my enquiry.
+        </label>
+        {errorFor("consent")}
       </div>
 
       {/* Bait for form-filling bots. Real visitors never see or tab into it. */}
@@ -245,7 +318,9 @@ export default function ContactForm() {
         {sending ? "Sending…" : contact.submitLabel}
       </button>
 
-      <p className="form-note">{contact.consent}</p>
+      <p className="form-note">
+        Please do not include confidential financial documents or data in this form.
+      </p>
     </form>
   );
 }
