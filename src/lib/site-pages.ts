@@ -140,13 +140,24 @@ function insightsIndex(pages: SitePage[]): string {
           const author = a.html.match(/<p class="byline">By <strong>([\s\S]*?)<\/strong>/)?.[1] ?? "GOP Editorial";
           return (
             `<div class="card"><h3><a href="${a.path}">${h1Html(a.html)}</a></h3>` +
-            `<p>${escapeHtml(a.meta.description)}</p><p class="byline">By ${author}</p></div>`
+            `<p>${escapeHtml(a.meta.description)}</p><p class="byline">By ${author}` +
+            (a.published ? ` &middot; <time datetime="${a.published}">${longDate(a.published)}</time>` : "") +
+            `</p></div>`
           );
         })
         .join("\n");
       return `<h2>${escapeHtml(category)}</h2><div class="grid">\n${cards}\n</div>`;
     })
     .join("\n");
+}
+
+function longDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 function h1Html(html: string): string {
